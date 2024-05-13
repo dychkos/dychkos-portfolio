@@ -36,7 +36,7 @@ export const GetInTouch: React.FC = () => {
     <Container className="py-24">
       <Heading>Get in touch</Heading>
       <Heading2 className="mt-4 mb-8 max-w-xl mx-auto text-center">
-        What’s next? Feel free to reach out to me if you're looking for a
+        What’s next? Feel free to reach out to me if you`re looking for a
         designer or a developer, have a query, or simply want to connect.
       </Heading2>
       <div className="p-4">

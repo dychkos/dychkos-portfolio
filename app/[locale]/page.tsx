@@ -4,8 +4,12 @@ import Skills from "@/components/index/Skills";
 import Experience from "@/components/index/Experience";
 import Work from "@/components/index/Work";
 import GetInTouch from "@/components/index/GetInTouch";
+import { unstable_setRequestLocale } from "next-intl/server";
 
-export default function Index() {
+// @ts-ignore
+export default function Index({ params: { locale } }) {
+  unstable_setRequestLocale(locale);
+
   return (
     <div>
       <Preview />
