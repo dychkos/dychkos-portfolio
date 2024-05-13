@@ -1,0 +1,64 @@
+import React from "react";
+import Heading from "@/components/partials/Heading";
+import Container from "@/components/Container";
+import Image from "next/image";
+import { useTranslations } from "next-intl";
+import Heading3 from "@/components/ui/typography/Heading3";
+import Body1 from "@/components/ui/typography/Body1";
+
+const About: React.FC = () => {
+  const t = useTranslations("About");
+
+  return (
+    <div className="bg-gray-50 dark:bg-gray-950 py-24">
+      <Container>
+        <Heading>{t("heading")}</Heading>
+
+        <div className="mt-12 flex flex-col items-center md:items-start md:flex-row gap-12 xl:gap-[192px]">
+          <div className="min-w-72 w-72 h-80 relative">
+            <div className="z-0 absolute w-72 h-72 bg-gray-400 top-5 left-5"></div>
+
+            <Image
+              src="/images/img_me.jpg"
+              alt="Me"
+              width={480}
+              height={480}
+              className="relative mx-auto"
+              style={{ zIndex: "1" }}
+            />
+          </div>
+
+          <div>
+            <Heading3 className="mb-6 text-3xl font-semibold text-gray-900 dark:text-gray-100">
+              {t("title")}
+            </Heading3>
+
+            {Array(4)
+              .fill(false)
+              .map((el, index) => (
+                <Body1 className="mb-4" key={index}>
+                  {t(`body.${index}`)}
+                </Body1>
+              ))}
+            <Body1 className="mb-4">{t("summary")}</Body1>
+            <ul className="grid grid-cols-1 md:grid-cols-2 grid-rows-2 list-disc list-inside gap-x-2.5">
+              {Array(4)
+                .fill(false)
+                .map((skill, index) => (
+                  <li
+                    className="text-base lg:text-lg text-gray-900 dark:text-gray-200"
+                    key={index}
+                  >
+                    {t(`main.${index}`)}
+                  </li>
+                ))}
+            </ul>
+            <Body1 className="mt-4">{t("last-thing")}</Body1>
+          </div>
+        </div>
+      </Container>
+    </div>
+  );
+};
+
+export default About;

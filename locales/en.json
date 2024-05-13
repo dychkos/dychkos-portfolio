@@ -1,0 +1,42 @@
+{
+  "Header": {
+    "about": "About",
+    "work": "Work",
+    "contact": "Contact",
+    "get-cv": "Download CV",
+    "switch-theme": "Switch theme"
+  },
+  "Index": {
+    "greeting": "Hello, world!",
+    "changeLanguage": "Change language"
+  },
+  "LocaleSwitcher": {
+    "label": "Change language",
+    "locale": "{locale, select, ua {UA} en {EN} other {Unknown}}"
+  },
+  "Preview": {
+    "greeting": "Hi, I’m Serhii \uD83D\uDC4B",
+    "about": "I'm a UX Designer and Web Developer (React.js & Node.js) with a focus on creating exceptional digital experiences that are user-centric, accessible, usable, visually appealing, and responsive. I have been  designing web and android applications for over a year and developing web applications for over a year now, I have a deep passion for designing and researching about user psychology.",
+    "locale": "Mykolaiv, Ukraine",
+    "availability-yes": "Available for cooperation",
+    "availability-no": "Not available for cooperation till 8AM"
+  },
+  "About": {
+    "heading": "About me",
+    "title": "Curious about me? Here you have it:",
+    "body": [
+      "I'm a passionate, self-proclaimed designer who specializes in UX Designing and Web Development (React.js & Node.js). I am very enthusiastic about bringing the technical and visual aspects of digital products to life. User experience, pixel perfect design, and writing clear, readable, highly performant code matters to me.",
+      "I have started my journey over a year back as a designer and a web developer in 2023, and since then, I've continued to grow and evolve as a designer and a developer, taking on new challenges and learning the latest technologies along the way.",
+      "I have started my journey over a year back as a designer and a web developer in 2023, and since then, I've continued to grow and evolve as a designer and a developer, taking on new challenges and learning the latest technologies along the way.",
+      "I have started my journey over a year back as a designer and a web developer in 2023, and since then, I've continued to grow and evolve as a designer and a developer, taking on new challenges and learning the latest technologies along the way."
+    ],
+    "summary": "Finally, some quick bits about me.",
+    "main": [
+      "B.Tech. in Computer Science",
+      "Freelancer",
+      "Tech Geek",
+      "UX Designer"
+    ],
+    "last-thing": "One last thing, I'm available for freelance work, so feel free to reach out and say hello! I promise I don't bite \uD83D\uDE09"
+  }
+}
