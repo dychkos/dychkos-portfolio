@@ -25,18 +25,20 @@
     "heading": "About me",
     "title": "Curious about me? Here you have it:",
     "body": [
-      "I'm a passionate, self-proclaimed designer who specializes in UX Designing and Web Development (React.js & Node.js). I am very enthusiastic about bringing the technical and visual aspects of digital products to life. User experience, pixel perfect design, and writing clear, readable, highly performant code matters to me.",
-      "I have started my journey over a year back as a designer and a web developer in 2023, and since then, I've continued to grow and evolve as a designer and a developer, taking on new challenges and learning the latest technologies along the way.",
-      "I have started my journey over a year back as a designer and a web developer in 2023, and since then, I've continued to grow and evolve as a designer and a developer, taking on new challenges and learning the latest technologies along the way.",
-      "I have started my journey over a year back as a designer and a web developer in 2023, and since then, I've continued to grow and evolve as a designer and a developer, taking on new challenges and learning the latest technologies along the way."
+      "My main focus is my love for creation. I always strive for quality work, and I apply this principle to all of my projects.",
+      "While working on projects, I always keep an eye on trends and the latest technologies. This helps me stay up-to-date with the latest developments in web development.",
+      "Throughout my career, I have had the opportunity to work on projects of varying complexity in areas such as online insurance, environmental initiatives, travel planning, real estate, and others. This allows me to quickly adapt to different business challenges and implement the most effective solutions in my work."
     ],
+    "avocation": "In addition to programming, I love reading, running, GYM training, and overall strive to lead an active and conscious lifestyle. Here is my progress in this regard:",
+    "running": "Running",
+    "sport": "Sport",
     "summary": "Finally, some quick bits about me.",
     "main": [
       "B.Tech. in Computer Science",
-      "Freelancer",
-      "Tech Geek",
-      "UX Designer"
+      "Enjoying science fiction",
+      "Fan of an active lifestyle",
+      "Craft beer enthusiast"
     ],
-    "last-thing": "One last thing, I'm available for freelance work, so feel free to reach out and say hello! I promise I don't bite \uD83D\uDE09"
+    "last-thing": "And finally: I respond very quickly, so don't hesitate to reach out and say hello! I promise I don't bite \uD83D\uDE09"
   }
 }
