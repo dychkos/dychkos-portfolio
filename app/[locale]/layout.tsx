@@ -25,7 +25,11 @@ export default async function LocaleLayout({
   unstable_setRequestLocale(locale);
 
   return (
-    <html className="h-full" lang={locale} suppressHydrationWarning>
+    <html
+      className="h-full scroll-smooth"
+      lang={locale}
+      suppressHydrationWarning
+    >
       <body
         className={clsx(
           inter.className,

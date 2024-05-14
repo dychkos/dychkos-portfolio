@@ -21,6 +21,8 @@ const Header: React.FC = () => {
     }
   }, [isOpened]);
 
+  const hide = () => setIsOpened(false);
+
   return (
     <Container className="py-4 md:py-4 flex flex-row justify-between items-center">
       <span className="text-3xl font-bold dark:text-white">&lt;dy /&gt;</span>
@@ -33,13 +35,19 @@ const Header: React.FC = () => {
       >
         <ul className="flex flex-col border-y-2 w-full py-4 gap-4 whitespace-nowrap md:flex-row md:gap-6 md:w-auto md:pr-6 md:py-0 border-gray-300 md:border-y-0 md:border-r-2">
           <li className="text-base text-gray-600 font-medium">
-            <Link href="#">{t("about")}</Link>
+            <Link href="#about" onClick={hide}>
+              {t("about")}
+            </Link>
           </li>
           <li className="text-base text-gray-600 font-medium">
-            <Link href="#">{t("work")}</Link>
+            <Link href="#work" onClick={hide}>
+              {t("work")}
+            </Link>
           </li>
           <li className="text-base text-gray-600 font-medium">
-            <Link href="#">{t("contact")}</Link>
+            <Link href="#contact" onClick={hide}>
+              {t("contact")}
+            </Link>
           </li>
         </ul>
         <div className="my-4 flex flex-col w-full md:flex-row items-center md:ml-6 md:my-0 gap-4">

@@ -28,7 +28,7 @@ export const Skills: React.FC = () => {
       </div>
       <Heading3 className="text-center mt-12">
         My favourite combo{" "}
-        <span className="bg-gradient-to-r from-yellow-700 to-yellow-400 bg-clip-text text-transparent">
+        <span className="block sm:inline bg-gradient-to-r from-yellow-700 to-yellow-400 bg-clip-text text-transparent">
           Laravel + React
         </span>
       </Heading3>
