@@ -6,8 +6,13 @@ import Work from "@/components/index/Work";
 import GetInTouch from "@/components/index/GetInTouch";
 import { unstable_setRequestLocale } from "next-intl/server";
 
-// @ts-ignore
-export default function Index({ params: { locale } }) {
+interface IndexProps {
+  params: {
+    locale: string;
+  };
+}
+
+export default function Index({ params: { locale } }: IndexProps) {
   unstable_setRequestLocale(locale);
 
   return (

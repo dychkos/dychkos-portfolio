@@ -16,10 +16,10 @@
   },
   "Preview": {
     "greeting": "Hi, I’m Serhii \uD83D\uDC4B",
-    "about": "I'm a UX Designer and Web Developer (React.js & Node.js) with a focus on creating exceptional digital experiences that are user-centric, accessible, usable, visually appealing, and responsive. I have been  designing web and android applications for over a year and developing web applications for over a year now, I have a deep passion for designing and researching about user psychology.",
+    "about": "As a Full Stack Web Developer from southern Ukraine \uD83C\uDDFA\uD83C\uDDE6 with over 3 years of industry experience, I am dedicated to creating high-quality products, constantly advancing my skills, and enjoying the simple pleasures of everyday life.",
     "locale": "Mykolaiv, Ukraine",
-    "availability-yes": "Available for cooperation",
-    "availability-no": "Not available for cooperation till 8AM"
+    "availability-yes": "Online",
+    "availability-no": "Offline"
   },
   "About": {
     "heading": "About me",
@@ -40,5 +40,47 @@
       "Craft beer enthusiast"
     ],
     "last-thing": "And finally: I respond very quickly, so don't hesitate to reach out and say hello! I promise I don't bite \uD83D\uDE09"
+  },
+  "Skills": {
+    "heading": "Skills",
+    "title": "The skills, tools and technologies I am really good at:",
+    "combo": "My favourite combo"
+  },
+  "Experience": {
+    "heading": "My Experience",
+    "title": "Here's a brief summary of my recent experience:",
+    "companies": [
+      {
+        "name": "NewGen",
+        "period": "Apr. 2024 - Present",
+        "role": "Middle Full Stack Developer",
+        "responsibilities": [
+          "Optimization and caching when working with BigData databases",
+          "Refactoring static UI components to dynamic using Livewire"
+        ]
+      },
+      {
+        "name": "FluidWeb",
+        "period": "Nov. 2021 - Apr. 2024",
+        "role": "Junior-Middle Full Stack Developer",
+        "responsibilities": [
+          "Participated in the development of an online insurance product in the USA with over 400k+ users.",
+          "Integrated tools for data collection such as SalesForce, Mixpanel, Intercom.",
+          "Built APIs for communication with American insurance companies.",
+          "Implemented cronjobs, queue mechanisms, and caching on the backend.",
+          "Participated in setting up the AWS environment for project deployment (EC2, CodeCommit, IAM, CloudWatch, S3)."
+        ]
+      },
+      {
+        "name": "GrandySoft",
+        "period": "Jun. 2021 - Sep. 2021",
+        "role": "Junior React Front End Developer",
+        "responsibilities": [
+          "Implemented JWT authorization in React",
+          "Developed a custom UI kit for the project",
+          "Extended existing functionality for the WEB CAD system"
+        ]
+      }
+    ]
   }
 }

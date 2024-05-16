@@ -38,7 +38,10 @@ const Preview: React.FC<PreviewProps> = ({ className }) => {
           {t("locale")}
         </div>
         <Body1
-          className={cn([isWorkHours ? "text-green-700" : "text-red-800"])}
+          className={cn([
+            "text-sm",
+            isWorkHours ? "text-green-700" : "text-red-800",
+          ])}
         >
           • {isWorkHours ? t("availability-yes") : t("availability-no")}
         </Body1>

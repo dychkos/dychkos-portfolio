@@ -4,14 +4,14 @@ import React from "react";
 import Body2 from "@/components/ui/typography/Body2";
 import Heading3 from "@/components/ui/typography/Heading3";
 import Heading2 from "@/components/ui/typography/Heading2";
+import { useTranslations } from "next-intl";
 
 export const Skills: React.FC = () => {
+  const t = useTranslations("Skills");
   return (
-    <Container className="py-24">
-      <Heading>Skills</Heading>
-      <Heading2 className="mt-4 text-center">
-        The skills, tools and technologies I am really good at:
-      </Heading2>
+    <Container className="py-24" id="skills">
+      <Heading>{t("heading")}</Heading>
+      <Heading2 className="mt-4 text-center">{t("title")}</Heading2>
       <div className="mt-12 grid grid-cols-3 md:grid-cols-4 justify-center gap-y-12">
         {skillsData.map((skill) => (
           <div
@@ -27,7 +27,7 @@ export const Skills: React.FC = () => {
         ))}
       </div>
       <Heading3 className="text-center mt-12">
-        My favourite combo{" "}
+        {t("combo")}&nbsp;
         <span className="block sm:inline bg-gradient-to-r from-yellow-700 to-yellow-400 bg-clip-text text-transparent">
           Laravel + React
         </span>
