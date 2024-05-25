@@ -1,10 +1,12 @@
 import clsx from "clsx";
 import { Inter } from "next/font/google";
-import { getMessages, unstable_setRequestLocale } from "next-intl/server";
-import { ReactNode } from "react";
+import { unstable_setRequestLocale } from "next-intl/server";
+import React, { ReactNode } from "react";
 import { locales } from "@/config";
 import Header from "@/components/Header";
 import Providers from "@/app/Providers";
+import Footer from "@/components/Footer";
+import GetInTouch from "@/components/index/GetInTouch";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -39,6 +41,9 @@ export default async function LocaleLayout({
         <Providers>
           <Header />
           {children}
+          <GetInTouch />
+
+          <Footer />
         </Providers>
       </body>
     </html>

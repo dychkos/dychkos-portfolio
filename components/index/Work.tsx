@@ -10,7 +10,7 @@ import { cn } from "@/utils/helper";
 
 const Work: React.FC = () => {
   return (
-    <Container className="py-24" id="work">
+    <Container className="py-16 lg:py-24" id="work">
       <Heading>Work</Heading>
       <Heading2 className="mt-4 text-center">
         Some of the noteworthy projects I have built:

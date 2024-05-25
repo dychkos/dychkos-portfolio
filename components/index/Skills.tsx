@@ -9,7 +9,7 @@ import { useTranslations } from "next-intl";
 export const Skills: React.FC = () => {
   const t = useTranslations("Skills");
   return (
-    <Container className="py-24" id="skills">
+    <Container className="py-16 lg:py-24" id="skills">
       <Heading>{t("heading")}</Heading>
       <Heading2 className="mt-4 text-center">{t("title")}</Heading2>
       <div className="mt-12 grid grid-cols-3 md:grid-cols-4 justify-center gap-y-12">

@@ -24,7 +24,7 @@ const Preview: React.FC<PreviewProps> = ({ className }) => {
   return (
     <Container
       className={clsx(
-        "py-24 flex flex-col-reverse md:flex-row gap-12 justify-between",
+        "py-16 lg:py-24 flex flex-col-reverse md:flex-row gap-12 justify-between",
         className
       )}
     >
@@ -33,15 +33,12 @@ const Preview: React.FC<PreviewProps> = ({ className }) => {
           {t("greeting")}
         </h1>
         <Body1 className="mt-3 max-w-3xl">{t("about")}</Body1>
-        <div className="mt-12 mb-2 flex flex-row gap-2 items-center text-gray-600 dark:text-gray-100">
+        <Body1 className="mt-12 mb-2 flex flex-row gap-2 items-center text-gray-600 dark:text-gray-100">
           <RiMapPin2Line />
           {t("locale")}
-        </div>
+        </Body1>
         <Body1
-          className={cn([
-            "text-sm",
-            isWorkHours ? "text-green-700" : "text-red-800",
-          ])}
+          className={cn([isWorkHours ? "text-green-700" : "text-red-800"])}
         >
           • {isWorkHours ? t("availability-yes") : t("availability-no")}
         </Body1>

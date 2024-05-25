@@ -1,7 +1,7 @@
 {
   "Header": {
     "about": "About",
-    "work": "Work",
+    "experience": "Experience",
     "contact": "Contact",
     "get-cv": "Download CV",
     "switch-theme": "Switch theme"
@@ -55,8 +55,8 @@
         "period": "Apr. 2024 - Present",
         "role": "Middle Full Stack Developer",
         "responsibilities": [
-          "Optimization and caching when working with BigData databases",
-          "Refactoring static UI components to dynamic using Livewire"
+          "Optimization and caching when working with BigData databases.",
+          "Refactoring static UI components to dynamic using Livewire."
         ]
       },
       {
@@ -76,11 +76,31 @@
         "period": "Jun. 2021 - Sep. 2021",
         "role": "Junior React Front End Developer",
         "responsibilities": [
-          "Implemented JWT authorization in React",
-          "Developed a custom UI kit for the project",
-          "Extended existing functionality for the WEB CAD system"
+          "Implemented JWT authorization in React.",
+          "Developed a custom UI kit for the project.",
+          "Extended existing functionality for the WEB CAD system."
         ]
       }
     ]
+  },
+  "PostsPreview": {
+    "heading": "Sharing my thoughts",
+    "title": "Thoughts that I really want to leave here:",
+    "more": "Show more"
+  },
+  "GetInTouch": {
+    "heading": "Get In Touch",
+    "title": " What’s next? Feel free to reach out to me if you`re looking for a good developer, have a query, or simply want to connect.",
+    "copied": "Copied",
+    "phone": "Click to copy phone",
+    "email": "Click to copy email",
+    "other": "You may also find me on these platforms!"
+  },
+  "Footer": {
+    "main": "Made with love by ❤ Serhii Dychko"
+  },
+  "Posts": {
+    "title": "Mini blog",
+    "text": "You won't find anything particularly brilliant here. I'm sharing what matters to me."
   }
 }

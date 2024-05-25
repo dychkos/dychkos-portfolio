@@ -11,7 +11,7 @@ const About: React.FC = () => {
   const t = useTranslations("About");
 
   return (
-    <div className="bg-gray-50 dark:bg-gray-950 py-24" id="about">
+    <div className="bg-gray-50 dark:bg-gray-950 py-16 lg:py-24" id="about">
       <Container>
         <Heading>{t("heading")}</Heading>
 

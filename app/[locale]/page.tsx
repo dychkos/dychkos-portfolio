@@ -2,9 +2,9 @@ import Preview from "@/components/index/Preview";
 import About from "@/components/index/About";
 import Skills from "@/components/index/Skills";
 import Experience from "@/components/index/Experience";
-import Work from "@/components/index/Work";
-import GetInTouch from "@/components/index/GetInTouch";
 import { unstable_setRequestLocale } from "next-intl/server";
+import PostsPreview from "@/components/index/PostsPreview";
+import React from "react";
 
 interface IndexProps {
   params: {
@@ -16,13 +16,13 @@ export default function Index({ params: { locale } }: IndexProps) {
   unstable_setRequestLocale(locale);
 
   return (
-    <div>
+    <main>
       <Preview />
       <About />
       <Skills />
       <Experience />
-      <Work />
-      <GetInTouch />
-    </div>
+      <PostsPreview />
+      {/*<Work />*/}
+    </main>
   );
 }

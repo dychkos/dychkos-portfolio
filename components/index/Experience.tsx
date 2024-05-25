@@ -10,7 +10,7 @@ const Experience: React.FC = () => {
   const messages = useMessages() as AbstractIntlMessages & MessagesType;
 
   return (
-    <div className="bg-gray-50 dark:bg-gray-950 py-24">
+    <div className="bg-gray-50 dark:bg-gray-950 py-16 lg:py-24" id="experience">
       <Container>
         <Heading>{t("heading")}</Heading>
         <Heading2 className="mt-4 mb-8 text-center">{t("title")}</Heading2>
@@ -20,7 +20,7 @@ const Experience: React.FC = () => {
             return (
               <div
                 key={index}
-                className="max-w-4xl mx-auto mb-8 bg-white dark:bg-gray-900 shadow-md rounded-lg p-6 mb-8 flex flex-col md:flex-row gap-4 md:gap-12"
+                className="max-w-4xl mx-auto mb-8 bg-white dark:bg-gray-900 shadow-md rounded-lg p-6 mb-8 flex flex-col lg:flex-row gap-4 lg:gap-12"
               >
                 <div className="flex items-center mb-2">
                   <img

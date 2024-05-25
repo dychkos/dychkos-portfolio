@@ -3,7 +3,7 @@
 import clsx from "clsx";
 import { useParams } from "next/navigation";
 import { ChangeEvent, ReactNode, useTransition } from "react";
-import { usePathname, useRouter } from "@/utils/navigation";
+import { usePathname, useRouter } from "@/lib/navigation";
 import Body1 from "@/components/ui/typography/Body1";
 
 type Props = {
