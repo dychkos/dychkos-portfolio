@@ -3,6 +3,7 @@ import Post from "@/components/posts/Post";
 import { Post as PostType } from "@prisma/client";
 import prisma from "@/lib/prisma";
 import { getTranslations } from "next-intl/server";
+import Heading2 from "@/components/ui/typography/Heading2";
 
 const getPosts = async (): Promise<PostType[]> => {
   return await prisma.post.findMany({});
@@ -20,9 +21,9 @@ export default async function Page() {
           {t("title")}
         </h2>
 
-        <p className="mt-4 mx-auto text-gray-700 max-w-sm text-center">
+        <Heading2 className="mt-4 mx-auto max-w-md text-center">
           {t("text")}
-        </p>
+        </Heading2>
       </div>
       <div className="flex flex-col gap-6">
         {posts.map((post) => (
