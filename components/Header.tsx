@@ -47,7 +47,7 @@ const Header: React.FC = () => {
             </Link>
           </li>
           <li className="text-base text-gray-600 dark:text-gray-300 font-medium">
-            <Link href={{ pathname: "/" }} onClick={hide}>
+            <Link href="/#contact" onClick={hide}>
               {t("contact")}
             </Link>
           </li>
