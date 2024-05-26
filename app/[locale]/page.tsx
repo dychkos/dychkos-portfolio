@@ -5,6 +5,7 @@ import Experience from "@/components/index/Experience";
 import { unstable_setRequestLocale } from "next-intl/server";
 // import PostsPreview from "@/components/index/PostsPreview";
 import React from "react";
+import PostsPreview from "@/components/index/PostsPreview";
 
 interface IndexProps {
   params: {
@@ -21,7 +22,7 @@ export default function Index({ params: { locale } }: IndexProps) {
       <About />
       <Skills />
       <Experience />
-      {/*<PostsPreview />*/}
+      <PostsPreview />
       {/*<Work />*/}
     </main>
   );
