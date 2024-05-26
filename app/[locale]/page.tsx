@@ -22,7 +22,7 @@ export default function Index({ params: { locale } }: IndexProps) {
       <About />
       <Skills />
       <Experience />
-      <PostsPreview />
+      {/*<PostsPreview />*/}
       {/*<Work />*/}
     </main>
   );
