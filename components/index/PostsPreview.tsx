@@ -8,6 +8,8 @@ import { Post as PostType } from "@prisma/client";
 import prisma from "@/lib/prisma";
 import { getTranslations } from "next-intl/server";
 
+export const dynamic = "force-dynamic";
+
 const getPosts = async (): Promise<PostType[]> => {
   return await prisma.post.findMany({
     orderBy: {

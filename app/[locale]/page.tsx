@@ -34,6 +34,8 @@ export const metadata = {
   },
 };
 
+export const dynamic = "force-dynamic";
+
 export default function Index({ params: { locale } }: IndexProps) {
   unstable_setRequestLocale(locale);
 
