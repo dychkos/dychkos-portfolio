@@ -1,11 +1,12 @@
 "use client";
 import Image from "next/image";
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Body1 from "@/components/ui/typography/Body1";
 import { Link } from "@/lib/navigation";
 import LikeButton from "@/components/ui/LikeButton";
 import { Post as PostType } from "@prisma/client";
 import { deleteCookie, hasCookie, setCookie } from "cookies-next";
+import Body2 from "@/components/ui/typography/Body2";
 
 interface PostProps {
   post: PostType;
@@ -72,7 +73,7 @@ const Post: React.FC<PostProps> = ({ post }) => {
             className="size-14 rounded object-cover"
           />
         </Link>
-        <div>
+        <div className="flex-grow">
           <Body1>{post.content}</Body1>
           <div className="mt-2 sm:flex sm:items-center sm:gap-2">
             <div className="flex items-center">
@@ -85,6 +86,13 @@ const Post: React.FC<PostProps> = ({ post }) => {
             </div>
           </div>
         </div>
+        <Body2>
+          {post.createdAt.toLocaleDateString("en-US", {
+            day: "numeric",
+            month: "numeric",
+            year: "numeric",
+          })}
+        </Body2>
       </div>
     </article>
   );

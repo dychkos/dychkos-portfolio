@@ -34,10 +34,10 @@
     "sport": "Sport",
     "summary": "Finally, some quick bits about me.",
     "main": [
-      "B.Tech. in Computer Science",
+      "Bachelor in Computer Science",
       "Enjoying science fiction",
       "Fan of an active lifestyle",
-      "Craft beer enthusiast"
+      "I dream of building a life-changer startup."
     ],
     "last-thing": "And finally: I respond very quickly, so don't hesitate to reach out and say hello! I promise I don't bite \uD83D\uDE09"
   },
@@ -97,7 +97,7 @@
     "other": "You may also find me on these platforms!"
   },
   "Footer": {
-    "main": "Made with love by ❤ Serhii Dychko"
+    "main": "Made with ❤ by Serhii Dychko"
   },
   "Posts": {
     "title": "Mini blog",
