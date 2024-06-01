@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
 import "./globals.css";
+import { Analytics } from "@vercel/analytics/react";
 
 type Props = {
   children: ReactNode;
@@ -31,7 +32,10 @@ export default function RootLayout({ children }: Props) {
         <link rel="manifest" href="/site.webmanifest" />
         <title>Serhii | Developer</title>
       </head>
-      <body>{children}</body>
+      <body>
+        {children}
+        <Analytics />
+      </body>
     </html>
   );
 }
