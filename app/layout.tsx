@@ -30,7 +30,6 @@ export default function RootLayout({ children }: Props) {
           href="/favicon-16x16.png"
         />
         <link rel="manifest" href="/site.webmanifest" />
-        <title>Serhii | Developer</title>
       </head>
       <body>
         {children}

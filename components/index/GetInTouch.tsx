@@ -4,7 +4,7 @@ import Heading from "@/components/partials/Heading";
 import Heading2 from "@/components/ui/typography/Heading2";
 import React, { useState } from "react";
 import { FiMail, FiPhone } from "react-icons/fi";
-
+import { FaThreads } from "react-icons/fa6";
 import { BsCopy } from "react-icons/bs";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
@@ -22,7 +22,7 @@ export const GetInTouch: React.FC = () => {
       setShowPhoneEggs((prev) => !prev);
     }, 5000);
 
-    return () => clearInterval(intervalId); // Cleanup the interval on component unmount
+    return () => clearInterval(intervalId);
   }, []);
 
   const t = useTranslations("GetInTouch");
@@ -117,6 +117,9 @@ export const GetInTouch: React.FC = () => {
       </div>
       <Heading2 className="mt-12 text-center">{t("other")}</Heading2>
       <Body1 className="mt-4 flex flex-row gap-2 justify-center">
+        <Link href="https://www.threads.net/@dychkos">
+          <FaThreads size={24} />
+        </Link>
         <Link href="https://x.com/SerhiiDychko">
           <FaXTwitter size={24} />
         </Link>

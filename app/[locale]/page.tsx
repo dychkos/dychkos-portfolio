@@ -15,7 +15,7 @@ interface IndexProps {
 
 // metadata.js
 export const metadata: Metadata = {
-  title: "Serhii Dychko | Dev",
+  title: "Serhii Dychko | Developer",
   description:
     "Welcome to my developer portfolio. Here, you'll find my projects, skills, and contact information.",
   keywords: "developer, portfolio, web development, projects, skills",
