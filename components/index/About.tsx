@@ -34,7 +34,7 @@ const About: React.FC = () => {
               {t("title")}
             </Heading3>
 
-            {Array(3)
+            {Array(2)
               .fill(false)
               .map((el, index) => (
                 <Body1 className="mb-4" key={index}>
