@@ -26,8 +26,7 @@
     "title": "Curious about me? Here you have it:",
     "body": [
       "My main focus is my love for creation. I always strive for quality work, and I apply this principle to all of my projects.",
-      "While working on projects, I always keep an eye on trends and the latest technologies. This helps me stay up-to-date with the latest developments in web development.",
-      "Throughout my career, I have had the opportunity to work on projects of varying complexity in areas such as online insurance, environmental initiatives, travel planning, real estate, and others. This allows me to quickly adapt to different business challenges and implement the most effective solutions in my work."
+      "While working on projects, I always keep an eye on trends and the latest technologies. This helps me stay up-to-date with the latest developments in web development."
     ],
     "avocation": "In addition to programming, I love reading, running, GYM training, and overall strive to lead an active and conscious lifestyle. Here is my progress in this regard:",
     "running": "Running",
@@ -56,7 +55,9 @@
         "role": "Middle Full Stack Developer",
         "responsibilities": [
           "Optimization and caching when working with BigData databases.",
-          "Refactoring static UI components to dynamic using Livewire."
+          "Refactoring static UI components to dynamic using Livewire.",
+          "Configured a web application deployment from scratch in a Laravel Forge and Digital Ocean environment.",
+          "Set up CI/CD for a microservices architecture using Jenkins."
         ]
       },
       {
