@@ -17,13 +17,13 @@ const About: React.FC = () => {
 
         <div className="mt-12 flex flex-col items-center md:items-start md:flex-row gap-12 xl:gap-[192px]">
           <div className="min-w-80 w-72 h-80 relative">
-            <div className="z-0 absolute w-80 h-80 bg-gray-400 top-5 left-5"></div>
+            <div className="z-0 absolute bg-gray-400 top-5 left-5" style={{ width: 320, height: 480 }}></div>
 
             <Image
-              src="/images/img_me.jpg"
+              src="/images/me-vertical.jpg"
               alt="Me"
-              width={480}
-              height={480}
+              width={2000}
+              height={3000}
               className="relative mx-auto"
               style={{ zIndex: "1" }}
             />

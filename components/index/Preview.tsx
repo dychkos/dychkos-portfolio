@@ -56,13 +56,13 @@ const Preview: React.FC<PreviewProps> = ({ className }) => {
       </div>
       <div className="flex justify-center md:justify-start">
         <div className="w-72 h-80 relative">
-          <div className="z-0 absolute w-72 h-72 bg-gray-400 top-5 left-5"></div>
+          <div className="z-0 absolute bg-gray-400 top-5 left-5" style={{ width: 280, height: 280 }}></div>
 
           <Image
-            src="/images/ai_avatar.jpg"
+            src="/images/me.jpg"
             alt="Me"
-            width={280}
-            height={320}
+            width={500}
+            height={500}
             className="relative mx-auto"
             style={{ zIndex: "1" }}
           />
