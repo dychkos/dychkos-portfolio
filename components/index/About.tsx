@@ -16,15 +16,15 @@ const About: React.FC = () => {
         <Heading>{t("heading")}</Heading>
 
         <div className="mt-12 flex flex-col items-center md:items-start md:flex-row gap-12 xl:gap-[192px]">
-          <div className="min-w-80 w-72 h-80 relative">
-            <div className="z-0 absolute bg-gray-400 top-5 left-5" style={{ width: 320, height: 480 }}></div>
+          <div className="min-w-80 w-72 relative">
+            <div className="z-0 absolute bg-gray-400 w-[320px] h-80 md:h-[480px] top-5 left-5"></div>
 
             <Image
               src="/images/me-vertical.jpg"
               alt="Me"
               width={2000}
               height={3000}
-              className="relative mx-auto"
+              className="relative mx-auto object-cover h-80 md:h-auto"
               style={{ zIndex: "1" }}
             />
           </div>
