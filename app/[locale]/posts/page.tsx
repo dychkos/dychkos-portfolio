@@ -2,7 +2,7 @@ import Container from "@/components/Container"
 import Post from "@/components/posts/Post"
 import type { Post as PostType } from "@prisma/client"
 import prisma from "@/lib/prisma"
-import { getTranslations } from "next-intl/server"
+import {getTranslations, unstable_setRequestLocale} from "next-intl/server"
 import Heading2 from "@/components/ui/typography/Heading2"
 import { Suspense } from "react"
 
@@ -21,7 +21,16 @@ const getPosts = async (): Promise<PostType[]> => {
   }
 }
 
-export default async function Page() {
+interface IndexProps {
+  params: {
+    locale: string;
+  };
+}
+
+
+export default async function Local({ params: { locale } }: IndexProps) {
+  unstable_setRequestLocale(locale);
+
   const t = await getTranslations("Posts")
 
   return (
