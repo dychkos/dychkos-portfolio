@@ -5,7 +5,6 @@ import type React from "react"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent } from "@/components/ui/card"
 import { createPost, updatePost } from "./actions"
@@ -35,11 +34,7 @@ export function PostForm({ post }: PostFormProps) {
       const result = isEditing ? await updatePost(post.id, formData) : await createPost(formData)
 
       if (result?.error) {
-        if (result.error._form) {
-          setFormError(result.error._form as string)
-        } else {
-          setErrors(result.error as Record<string, string[]>)
-        }
+        setErrors(result.error as Record<string, string[]>)
         setIsSubmitting(false)
       }
     } catch (error) {

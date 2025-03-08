@@ -20,8 +20,6 @@ export async function middleware(request: NextRequest) {
         secret: process.env.NEXTAUTH_SECRET,
       })
 
-      console.log('admin', token)
-
       if (!token) {
         const url = new URL("/login", request.url)
         url.searchParams.set("callbackUrl", pathname)

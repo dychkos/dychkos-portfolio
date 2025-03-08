@@ -46,7 +46,7 @@ async function PostsTable() {
         <thead className="bg-gray-50 dark:bg-gray-700">
           <tr>
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-              Title
+              Content
             </th>
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
               Likes
@@ -63,7 +63,6 @@ async function PostsTable() {
           {posts.map((post) => (
             <tr key={post.id} className="hover:bg-gray-50 dark:hover:bg-gray-750">
               <td className="px-6 py-4 whitespace-nowrap">
-                <div className="text-sm font-medium text-gray-900 dark:text-white">{post.title || "Untitled Post"}</div>
                 <div className="text-sm text-gray-500 dark:text-gray-400 truncate max-w-md">
                   {post.content?.substring(0, 100) || "No content"}
                 </div>

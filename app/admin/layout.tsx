@@ -7,13 +7,10 @@ import { LayoutDashboard, FileText, Settings, LogOut } from "lucide-react"
 import { getServerSession } from "next-auth/next"
 import { authOptions } from "@/app/api/auth/[...nextauth]/route"
 
-// This function checks if the user is authenticated and is an admin
-// Replace with your actual auth check
+
 async function getAuthUser() {
-  // This is a placeholder - replace with your actual auth logic
   const session = await getServerSession(authOptions)
 
-  console.log('ses', session)
   if (!session?.user || !session.user.email) {
     return null
   }
@@ -22,7 +19,6 @@ async function getAuthUser() {
   const user = await prisma.user.findUnique({
     where: { email: session.user.email ?? undefined },
   })
-  console.log('user', user, session.user.email)
 
   return user;
 //   return user?.role === "ADMIN" ? user : null

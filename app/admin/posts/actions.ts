@@ -5,20 +5,16 @@ import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
 import { z } from "zod"
 
-// Schema for post validation
 const PostSchema = z.object({
-  title: z.string().min(1, "Title is required"),
   content: z.string().min(1, "Content is required"),
 })
 
 type PostFormData = z.infer<typeof PostSchema>
 
-// Create a new post
 export async function createPost(formData: FormData) {
   const title = formData.get("title") as string
   const content = formData.get("content") as string
 
-  // Validate the data
   const validatedFields = PostSchema.safeParse({ title, content })
 
   if (!validatedFields.success) {
@@ -30,13 +26,10 @@ export async function createPost(formData: FormData) {
   try {
     await prisma.post.create({
       data: {
-        title,
         content,
       },
     })
 
-    revalidatePath("/admin/posts")
-    redirect("/admin/posts")
   } catch (error) {
     return {
       error: {
@@ -44,14 +37,15 @@ export async function createPost(formData: FormData) {
       },
     }
   }
+
+  revalidatePath("/admin/posts")
+  redirect("/admin/posts")
 }
 
-// Update an existing post
 export async function updatePost(id: number, formData: FormData) {
   const title = formData.get("title") as string
   const content = formData.get("content") as string
 
-  // Validate the data
   const validatedFields = PostSchema.safeParse({ title, content })
 
   if (!validatedFields.success) {
@@ -64,13 +58,9 @@ export async function updatePost(id: number, formData: FormData) {
     await prisma.post.update({
       where: { id },
       data: {
-        title,
         content,
       },
     })
-
-    revalidatePath("/admin/posts")
-    redirect("/admin/posts")
   } catch (error) {
     return {
       error: {
@@ -78,6 +68,9 @@ export async function updatePost(id: number, formData: FormData) {
       },
     }
   }
+
+  revalidatePath("/admin/posts")
+  redirect("/admin/posts")
 }
 
 // Delete a post
@@ -87,10 +80,12 @@ export async function deletePost(id: number) {
       where: { id },
     })
 
-    revalidatePath("/admin/posts")
-    return { success: true }
   } catch (error) {
     throw new Error("Failed to delete post")
   }
+
+  revalidatePath("/admin/posts")
+
+  return { success: true }
 }
 
