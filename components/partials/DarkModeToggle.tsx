@@ -24,7 +24,7 @@ const DarkModeToggle: React.FC = () => {
       {theme === "light" ? (
         <RiMoonLine className="text-gray-700 h-6 w-6" />
       ) : (
-        <RiSunLine className="text-gray-300 h-6 w-6" />
+        <RiSunLine className="text-gray-700 h-6 w-6" />
       )}
     </button>
   );

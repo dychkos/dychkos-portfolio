@@ -1,5 +1,5 @@
 import * as React from "react";
-import { ThemeProvider } from "next-themes";
+import {ThemeProvider} from "@/components/ThemeProvider"
 import { getMessages } from "next-intl/server";
 import { NextIntlClientProvider } from "next-intl";
 
