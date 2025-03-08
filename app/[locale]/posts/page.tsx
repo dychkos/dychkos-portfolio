@@ -8,7 +8,13 @@ import { Suspense } from "react"
 
 const getPosts = async (): Promise<PostType[]> => {
   try {
-    return await prisma.post.findMany({})
+    return await prisma.post.findMany({
+      orderBy: [
+        {
+          createdAt: 'desc',
+        },
+      ],
+    })
   } catch (error) {
     console.error("Failed to fetch posts:", error)
     return []
