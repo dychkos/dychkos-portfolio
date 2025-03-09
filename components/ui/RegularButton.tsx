@@ -1,6 +1,6 @@
-"use client";
-import React, { PropsWithChildren } from "react";
-import { cn } from "@/utils/helper";
+'use client';
+import React, { PropsWithChildren } from 'react';
+import { cn } from '@/utils/helper';
 
 interface RegularButtonProps extends PropsWithChildren {
   className?: string;
@@ -16,7 +16,7 @@ const RegularButton: React.FC<RegularButtonProps> = ({
     <button
       onClick={onClick}
       className={cn(
-        "transition duration-150 ease-out dark:bg-gray-50 dark:text-gray-900 dark:hover:bg-gray-200 hover:ease-in hover:bg-gray-700 bg-gray-900 font-medium text-white px-4 py-1.5 rounded-xl",
+        'rounded-xl bg-gray-900 px-4 py-1.5 font-medium text-white transition duration-150 ease-out hover:bg-gray-700 hover:ease-in dark:bg-gray-50 dark:text-gray-900 dark:hover:bg-gray-200',
         className
       )}
     >

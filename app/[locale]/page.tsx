@@ -1,11 +1,14 @@
-import Preview from "@/components/index/Preview";
-import About from "@/components/index/About";
-import Skills from "@/components/index/Skills";
-import Experience from "@/components/index/Experience";
-import { unstable_setRequestLocale } from "next-intl/server";
-// import PostsPreview from "@/components/index/PostsPreview";
-import React from "react";
-import { Metadata } from "next";
+import Preview from '@/components/index/Preview';
+import About from '@/components/index/About';
+import Skills from '@/components/index/Skills';
+import Experience from '@/components/index/Experience';
+import { unstable_setRequestLocale } from 'next-intl/server';
+import ContentPreview from '@/components/index/dynamic-sections/ContentPreview';
+import PostsPreview from '@/components/index/dynamic-sections/PostsPreview';
+import EventsPreview from '@/components/index/dynamic-sections/EventsPreview';
+import React from 'react';
+import { Metadata } from 'next';
+import ContentWrapper from '@/components/index/dynamic-sections/ContentPreview';
 
 interface IndexProps {
   params: {
@@ -15,27 +18,27 @@ interface IndexProps {
 
 // metadata.js
 export const metadata: Metadata = {
-  title: "Serhii Dychko | Developer",
+  title: 'Serhii Dychko | Developer',
   description:
     "Welcome to my developer portfolio. Here, you'll find my projects, skills, and contact information.",
-  keywords: "developer, portfolio, web development, projects, skills",
+  keywords: 'developer, portfolio, web development, projects, skills',
   authors: [
     {
-      url: "https://dychkos.top",
-      name: "Serhii Dychko",
+      url: 'https://dychkos.top',
+      name: 'Serhii Dychko',
     },
   ],
   openGraph: {
     title: "Serhii Dychko's Portfolio",
-    description: "Showcasing my projects and skills.",
-    images: "/images/img_me.jpg",
-    url: "https://dychkos.top",
+    description: 'Showcasing my projects and skills.',
+    images: '/images/img_me.jpg',
+    url: 'https://dychkos.top',
   },
   twitter: {
-    card: "summary_large_image",
+    card: 'summary_large_image',
     title: "Serhii Dychko's Portfolio",
-    description: "Showcasing my projects and skills.",
-    images: "/images/img_me.jpg",
+    description: 'Showcasing my projects and skills.',
+    images: '/images/img_me.jpg',
   },
 };
 
@@ -48,6 +51,10 @@ export default function Index({ params: { locale } }: IndexProps) {
       <About />
       <Skills />
       <Experience />
+      <ContentWrapper
+        postsContent={<PostsPreview />}
+        eventsContent={<EventsPreview />}
+      />
       {/*<PostsPreview />*/}
       {/*<Work />*/}
     </main>

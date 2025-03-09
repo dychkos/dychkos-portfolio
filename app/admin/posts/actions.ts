@@ -1,26 +1,26 @@
-"use server"
+'use server';
 
-import prisma from "@/lib/prisma"
-import { revalidatePath } from "next/cache"
-import { redirect } from "next/navigation"
-import { z } from "zod"
+import prisma from '@/lib/prisma';
+import { revalidatePath } from 'next/cache';
+import { redirect } from 'next/navigation';
+import { z } from 'zod';
 
 const PostSchema = z.object({
-  content: z.string().min(1, "Content is required"),
-})
+  content: z.string().min(1, 'Content is required'),
+});
 
-type PostFormData = z.infer<typeof PostSchema>
+type PostFormData = z.infer<typeof PostSchema>;
 
 export async function createPost(formData: FormData) {
-  const title = formData.get("title") as string
-  const content = formData.get("content") as string
+  const title = formData.get('title') as string;
+  const content = formData.get('content') as string;
 
-  const validatedFields = PostSchema.safeParse({ title, content })
+  const validatedFields = PostSchema.safeParse({ title, content });
 
   if (!validatedFields.success) {
     return {
       error: validatedFields.error.flatten().fieldErrors,
-    }
+    };
   }
 
   try {
@@ -28,30 +28,29 @@ export async function createPost(formData: FormData) {
       data: {
         content,
       },
-    })
-
+    });
   } catch (error) {
     return {
       error: {
-        _form: "Failed to create post. Please try again.",
+        _form: 'Failed to create post. Please try again.',
       },
-    }
+    };
   }
 
-  revalidatePath("/admin/posts")
-  redirect("/admin/posts")
+  revalidatePath('/admin/posts');
+  redirect('/admin/posts');
 }
 
 export async function updatePost(id: number, formData: FormData) {
-  const title = formData.get("title") as string
-  const content = formData.get("content") as string
+  const title = formData.get('title') as string;
+  const content = formData.get('content') as string;
 
-  const validatedFields = PostSchema.safeParse({ title, content })
+  const validatedFields = PostSchema.safeParse({ title, content });
 
   if (!validatedFields.success) {
     return {
       error: validatedFields.error.flatten().fieldErrors,
-    }
+    };
   }
 
   try {
@@ -60,17 +59,17 @@ export async function updatePost(id: number, formData: FormData) {
       data: {
         content,
       },
-    })
+    });
   } catch (error) {
     return {
       error: {
-        _form: "Failed to update post. Please try again.",
+        _form: 'Failed to update post. Please try again.',
       },
-    }
+    };
   }
 
-  revalidatePath("/admin/posts")
-  redirect("/admin/posts")
+  revalidatePath('/admin/posts');
+  redirect('/admin/posts');
 }
 
 // Delete a post
@@ -78,14 +77,12 @@ export async function deletePost(id: number) {
   try {
     await prisma.post.delete({
       where: { id },
-    })
-
+    });
   } catch (error) {
-    throw new Error("Failed to delete post")
+    throw new Error('Failed to delete post');
   }
 
-  revalidatePath("/admin/posts")
+  revalidatePath('/admin/posts');
 
-  return { success: true }
+  return { success: true };
 }
-

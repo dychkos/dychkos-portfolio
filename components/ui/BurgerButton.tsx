@@ -1,4 +1,4 @@
-import { cn } from "@/utils/helper";
+import { cn } from '@/utils/helper';
 
 interface BurgerButtonProps {
   isOpened: boolean;
@@ -17,13 +17,13 @@ const BurgerButton: React.FC<BurgerButtonProps> = ({
       className={cn(
         `tham tham-e-squeeze tham-w-7`,
         {
-          "tham-active": isOpened,
+          'tham-active': isOpened,
         },
         className
       )}
     >
-      <div className="tham-box">
-        <div className="tham-inner bg-gray-600 dark:bg-gray-50" />
+      <div className='tham-box'>
+        <div className='tham-inner bg-gray-600 dark:bg-gray-50' />
       </div>
     </div>
   );

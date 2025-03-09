@@ -1,6 +1,6 @@
-"use client";
-import { useEffect, useState } from "react";
-import { useDebounceCallback } from "usehooks-ts";
+'use client';
+import { useEffect, useState } from 'react';
+import { useDebounceCallback } from 'usehooks-ts';
 
 export const useResponsive = () => {
   // screen resolutions
@@ -37,12 +37,12 @@ export const useResponsive = () => {
 
   // add event listener
   const Setup = () => {
-    window.addEventListener("resize", debouncedCall, false);
+    window.addEventListener('resize', debouncedCall, false);
   };
 
   // remove the listener
   const Cleanup = () => {
-    window.removeEventListener("resize", debouncedCall, false);
+    window.removeEventListener('resize', debouncedCall, false);
   };
 
   return state;

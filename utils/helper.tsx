@@ -1,7 +1,7 @@
-import { type ClassValue, clsx } from 'clsx'
+import { type ClassValue, clsx } from 'clsx';
 
 export const getCurrentTimeInUkraine = () => {
-  const now = new Date().toLocaleString("en-US", { timeZone: "Europe/Kiev" });
+  const now = new Date().toLocaleString('en-US', { timeZone: 'Europe/Kiev' });
   return new Date(now);
 };
 
@@ -15,7 +15,6 @@ export const isWorkingHoursInUkraine = () => {
   return isWeekday && isWorkHours;
 };
 
-
 export function cn(...inputs: ClassValue[]) {
-  return clsx(inputs)
+  return clsx(inputs);
 }

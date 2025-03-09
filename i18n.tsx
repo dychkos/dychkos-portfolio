@@ -1,7 +1,7 @@
-import { notFound } from "next/navigation";
-import { getRequestConfig } from "next-intl/server";
+import { notFound } from 'next/navigation';
+import { getRequestConfig } from 'next-intl/server';
 
-const locales = ["en", "ua"];
+const locales = ['en', 'ua'];
 
 export default getRequestConfig(async ({ locale }) => {
   if (!locales.includes(locale as any)) notFound();

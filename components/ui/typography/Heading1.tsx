@@ -1,6 +1,6 @@
-import React, { PropsWithChildren } from "react";
-import { WithClassName } from "@/components/props.type";
-import { cn } from "@/utils/helper";
+import React, { PropsWithChildren } from 'react';
+import { WithClassName } from '@/components/props.type';
+import { cn } from '@/utils/helper';
 
 const Heading1: React.FC<WithClassName & PropsWithChildren> = ({
   className,
@@ -9,7 +9,7 @@ const Heading1: React.FC<WithClassName & PropsWithChildren> = ({
   return (
     <h1
       className={cn(
-        "tracking-normal text-4xl font-semibold md:text-5xl md:font-bold lg:text-6xl md:tracking-tight text-gray-900 dark:text-gray-50",
+        'text-4xl font-semibold tracking-normal text-gray-900 dark:text-gray-50 md:text-5xl md:font-bold md:tracking-tight lg:text-6xl',
         className
       )}
     >

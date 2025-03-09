@@ -1,14 +1,14 @@
-import clsx from "clsx";
-import { Inter } from "next/font/google";
-import { unstable_setRequestLocale } from "next-intl/server";
-import React, { ReactNode } from "react";
-import { locales } from "@/config";
-import Header from "@/components/Header";
-import Providers from "@/app/Providers";
-import Footer from "@/components/Footer";
-import GetInTouch from "@/components/index/GetInTouch";
+import clsx from 'clsx';
+import { Inter } from 'next/font/google';
+import { unstable_setRequestLocale } from 'next-intl/server';
+import React, { ReactNode } from 'react';
+import { locales } from '@/config';
+import Header from '@/components/Header';
+import Providers from '@/app/Providers';
+import Footer from '@/components/Footer';
+import GetInTouch from '@/components/index/GetInTouch';
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: ['latin'] });
 
 type Props = {
   children: ReactNode;
@@ -28,14 +28,14 @@ export default async function LocaleLayout({
 
   return (
     <html
-      className="h-full scroll-smooth"
+      className='h-full scroll-smooth'
       lang={locale}
       suppressHydrationWarning
     >
       <body
         className={clsx(
           inter.className,
-          "flex h-full flex-col bg-white dark:bg-gray-900"
+          'flex h-full flex-col bg-white dark:bg-gray-900'
         )}
       >
         <Providers>

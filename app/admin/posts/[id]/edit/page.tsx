@@ -1,33 +1,34 @@
-import { notFound } from "next/navigation"
-import prisma from "@/lib/prisma"
-import { PostForm } from "../../post-form"
+import { notFound } from 'next/navigation';
+import prisma from '@/lib/prisma';
+import { PostForm } from '../../post-form';
 
 interface EditPostPageProps {
-    params: {
-        id: string
-    }
+  params: {
+    id: string;
+  };
 }
 
 export default async function EditPostPage({ params }: EditPostPageProps) {
-    const id = Number.parseInt(params.id)
+  const id = Number.parseInt(params.id);
 
-    if (isNaN(id)) {
-        notFound()
-    }
+  if (isNaN(id)) {
+    notFound();
+  }
 
-    const post = await prisma.post.findUnique({
-        where: { id },
-    })
+  const post = await prisma.post.findUnique({
+    where: { id },
+  });
 
-    if (!post) {
-        notFound()
-    }
+  if (!post) {
+    notFound();
+  }
 
-    return (
-        <div>
-            <h1 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white">Edit Post</h1>
-            <PostForm post={post} />
-        </div>
-    )
+  return (
+    <div>
+      <h1 className='mb-6 text-2xl font-bold text-gray-900 dark:text-white'>
+        Edit Post
+      </h1>
+      <PostForm post={post} />
+    </div>
+  );
 }
-
