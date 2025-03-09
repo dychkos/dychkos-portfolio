@@ -1,25 +1,25 @@
 import { notFound } from 'next/navigation';
 import prisma from '@/lib/prisma';
-import { PostForm } from '@/components/admin/posts/PostForm';
+import { EventForm } from '@/components/admin/events/EventForm';
 
-interface EditPostPageProps {
+interface EditEventPageProps {
   params: {
     id: string;
   };
 }
 
-export default async function EditPostPage({ params }: EditPostPageProps) {
+export default async function EditEventPage({ params }: EditEventPageProps) {
   const id = Number.parseInt(params.id);
 
   if (isNaN(id)) {
     notFound();
   }
 
-  const post = await prisma.post.findUnique({
+  const event = await prisma.event.findUnique({
     where: { id },
   });
 
-  if (!post) {
+  if (!event) {
     notFound();
   }
 
@@ -28,7 +28,7 @@ export default async function EditPostPage({ params }: EditPostPageProps) {
       <h1 className='mb-6 text-2xl font-bold text-gray-900 dark:text-white'>
         Edit Post
       </h1>
-      <PostForm post={post} />
+      <EventForm event={event} />
     </div>
   );
 }

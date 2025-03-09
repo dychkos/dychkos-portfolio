@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent } from '@/components/ui/card';
-import { createPost, updatePost } from './actions';
+import { createPost, updatePost } from '@/app/admin/posts/actions';
 import type { Post } from '@prisma/client';
 
 interface PostFormProps {
