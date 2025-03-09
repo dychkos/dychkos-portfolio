@@ -61,6 +61,8 @@ export async function createEvent(formData: FormData) {
   }
 
   revalidatePath('/admin/events');
+  revalidatePath('/ua');
+  revalidatePath('/en');
   redirect('/admin/events');
 }
 
