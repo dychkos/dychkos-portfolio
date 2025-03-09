@@ -36,7 +36,7 @@ export default async function EventsPage({
   const t = await getTranslations('Events');
 
   return (
-    <Container className='mt-12 lg:px-64'>
+    <Container className='mt-12'>
       <div className='mx-auto mb-12 max-w-2xl text-center'>
         <h2 className='mt-6 text-3xl font-bold text-gray-900 dark:text-gray-50 sm:text-4xl'>
           {t('title')}
