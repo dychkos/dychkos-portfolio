@@ -55,7 +55,7 @@ export default async function EventsPreview({
         </CardHeader>
       )}
       <CardContent className='px-0 sm:px-6'>
-        <div className='grid grid-cols-1 gap-8 space-y-4 md:grid-cols-2'>
+        <div className='grid grid-cols-1 items-baseline gap-8 space-y-4 md:grid-cols-2'>
           {events.map((event) => (
             <EventCard key={event.id} event={event} />
           ))}

@@ -84,7 +84,7 @@ async function EventsList() {
   }
 
   return (
-    <div className='grid gap-8 md:grid-cols-2'>
+    <div className='grid items-baseline gap-8 md:grid-cols-2'>
       {events.map((event) => (
         <EventCard key={event.id} event={event} />
       ))}
