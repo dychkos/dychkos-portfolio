@@ -3,19 +3,19 @@
 import type React from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { CalendarDays, FileText } from 'lucide-react';
-import { cn } from '@/lib/utils';
 import Container from '@/components/Container';
-import Heading from '@/components/partials/Heading';
-import { getTranslations } from 'next-intl/server';
-import Heading2 from '@/components/ui/typography/Heading2';
 
 interface ContentWrapperProps {
+  recentEventsTitle: string;
+  notesTitle: string;
   postsContent: React.ReactNode;
   eventsContent: React.ReactNode;
   defaultTab?: 'posts' | 'events';
 }
 
 export default function ContentWrapper({
+  recentEventsTitle,
+  notesTitle,
   postsContent,
   eventsContent,
   defaultTab = 'events',
@@ -26,12 +26,12 @@ export default function ContentWrapper({
         <TabsList className='mx-auto mb-8 grid min-h-[48px] w-full max-w-md grid-cols-2'>
           <TabsTrigger value='events' className='flex items-center gap-2 py-2'>
             <CalendarDays className='h-4 w-4' />
-            Recent Events
+            {recentEventsTitle}
           </TabsTrigger>
 
           <TabsTrigger value='posts' className='flex items-center gap-2 py-2'>
             <FileText className='h-4 w-4' />
-            Blog Posts
+            {notesTitle}
           </TabsTrigger>
         </TabsList>
 

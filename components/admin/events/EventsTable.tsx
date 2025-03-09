@@ -55,7 +55,7 @@ export default async function EventsTable() {
                 </div>
               </td>
               <td className='whitespace-nowrap px-6 py-4 text-sm text-gray-500 dark:text-gray-400'>
-                {event.link || 'No link'}
+                {event.link?.substring(0, 45) || 'No link'}
               </td>
               <td className='whitespace-nowrap px-6 py-4 text-sm text-gray-500 dark:text-gray-400'>
                 {event.type}

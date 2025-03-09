@@ -4,6 +4,7 @@ import {
   LogOut,
   Settings,
   CalendarCheck2,
+  Earth,
 } from 'lucide-react';
 import type React from 'react';
 import Link from 'next/link';
@@ -39,6 +40,7 @@ const Sidebar: React.FC = () => {
             label='Settings'
           />
           <div className='mt-6 border-t border-gray-200 pt-6 dark:border-gray-700'>
+            <NavItem href='/ua' icon={<Earth size={18} />} label='Site' />
             <NavItem
               href='/api/auth/signout'
               icon={<LogOut size={18} />}

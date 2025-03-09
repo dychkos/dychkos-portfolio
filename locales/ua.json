@@ -8,7 +8,9 @@
   },
   "Index": {
     "greeting": "Привіт!",
-    "changeLanguage": "Змінити мову"
+    "changeLanguage": "Змінити мову",
+    "recentEvents": "Нещодавні події",
+    "myNotes": "Мої нотатки"
   },
   "LocaleSwitcher": {
     "label": "Змінити мову",

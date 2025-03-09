@@ -2,7 +2,7 @@ import Preview from '@/components/index/Preview';
 import About from '@/components/index/About';
 import Skills from '@/components/index/Skills';
 import Experience from '@/components/index/Experience';
-import { unstable_setRequestLocale } from 'next-intl/server';
+import { getTranslations, unstable_setRequestLocale } from 'next-intl/server';
 import ContentPreview from '@/components/index/dynamic-sections/ContentPreview';
 import PostsPreview from '@/components/index/dynamic-sections/PostsPreview';
 import EventsPreview from '@/components/index/dynamic-sections/EventsPreview';
@@ -42,9 +42,10 @@ export const metadata: Metadata = {
   },
 };
 
-export default function Index({ params: { locale } }: IndexProps) {
+export default async function Index({ params: { locale } }: IndexProps) {
   unstable_setRequestLocale(locale);
 
+  const t = await getTranslations('Index');
   return (
     <main>
       <Preview />
@@ -52,6 +53,8 @@ export default function Index({ params: { locale } }: IndexProps) {
       <Skills />
       <Experience />
       <ContentWrapper
+        recentEventsTitle={t('recentEvents')}
+        notesTitle={t('myNotes')}
         postsContent={<PostsPreview />}
         eventsContent={<EventsPreview />}
       />

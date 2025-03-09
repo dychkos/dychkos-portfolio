@@ -8,7 +8,9 @@
   },
   "Index": {
     "greeting": "Hello, world!",
-    "changeLanguage": "Change language"
+    "changeLanguage": "Change language",
+    "recentEvents": "Recent Events",
+    "myNotes": "My notes"
   },
   "LocaleSwitcher": {
     "label": "Change language",
