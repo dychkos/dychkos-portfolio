@@ -38,7 +38,7 @@ async function getEvents(limit = 3, locale: string): Promise<EventType[]> {
 }
 
 export default async function EventsPreview({
-  limit = 3,
+  limit = 4,
   showHeading = true,
 }: EventPreviewProps) {
   const locale = useLocale();
@@ -55,7 +55,7 @@ export default async function EventsPreview({
         </CardHeader>
       )}
       <CardContent className='px-0 sm:px-6'>
-        <div className='space-y-4'>
+        <div className='grid grid-cols-1 gap-8 space-y-4 md:grid-cols-2'>
           {events.map((event) => (
             <EventCard key={event.id} event={event} />
           ))}

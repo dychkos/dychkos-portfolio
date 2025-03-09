@@ -94,7 +94,9 @@
     "more": "Show more"
   },
   "Events": {
-    "link": "View Details"
+    "link": "See More",
+    "title": "Tech Events",
+    "text": "My journey as a programmer"
   },
   "GetInTouch": {
     "heading": "Get In Touch",
