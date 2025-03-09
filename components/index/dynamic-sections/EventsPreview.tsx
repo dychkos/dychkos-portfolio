@@ -5,15 +5,10 @@ import { Link } from '@/lib/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-
-interface Event {
-  id: string;
-  title: string;
-  description: string;
-  date: Date | string;
-  type: string;
-  link?: string;
-}
+import Heading from '@/components/partials/Heading';
+import type React from 'react';
+import type { Event } from '@/types/event';
+import EventCard from '@/components/events/EventCard';
 
 interface EventPreviewProps {
   limit?: number;
@@ -68,9 +63,8 @@ export default async function EventsPreview({
     <Card className='border-none shadow-none'>
       {showHeading && (
         <CardHeader>
-          <CardTitle className='flex items-center justify-center gap-2 text-center text-2xl font-bold'>
-            <CalendarDays className='h-5 w-5' />
-            {t('title') || 'Recent Events'}
+          <CardTitle>
+            <Heading>{t('heading')}</Heading>
           </CardTitle>
         </CardHeader>
       )}
@@ -82,48 +76,11 @@ export default async function EventsPreview({
         </div>
 
         <div className='mt-8 flex justify-center'>
-          <Button asChild variant='outline'>
+          <Button asChild variant='outline' className='dark:bg-neutral-700'>
             <Link href='/events'>{t('more') || 'View All Events'}</Link>
           </Button>
         </div>
       </CardContent>
-    </Card>
-  );
-}
-
-function EventCard({ event }: { event: Event }) {
-  return (
-    <Card className='overflow-hidden'>
-      <div className='p-6'>
-        <div className='flex flex-col space-y-2'>
-          <div className='flex items-center justify-between'>
-            <div className='flex items-center space-x-2 text-sm text-muted-foreground'>
-              <CalendarDays className='h-4 w-4' />
-              <span>{formatDate(new Date(event.date))}</span>
-            </div>
-            <Badge variant='outline'>{event.type}</Badge>
-          </div>
-
-          <h3 className='text-lg font-semibold'>{event.title}</h3>
-          <p className='text-muted-foreground'>{event.description}</p>
-
-          {event.link && (
-            <div className='pt-2'>
-              <Button asChild variant='ghost' size='sm' className='h-auto px-0'>
-                <Link
-                  href={event.link}
-                  className='flex items-center gap-1 text-primary'
-                  target='_blank'
-                  rel='noopener noreferrer'
-                >
-                  View Details
-                  <ExternalLink className='ml-1 h-3.5 w-3.5' />
-                </Link>
-              </Button>
-            </div>
-          )}
-        </div>
-      </div>
     </Card>
   );
 }

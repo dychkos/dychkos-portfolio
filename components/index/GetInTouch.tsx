@@ -11,6 +11,7 @@ import Link from 'next/link';
 import { FaXTwitter } from 'react-icons/fa6';
 import { LiaTelegram } from 'react-icons/lia';
 import Body1 from '@/components/ui/typography/Body1';
+import { Separator } from '@/components/ui/separator';
 
 export const GetInTouch: React.FC = () => {
   const [copied, setCopied] = useState<boolean>(false);
@@ -49,7 +50,9 @@ export const GetInTouch: React.FC = () => {
       .catch((err) => console.error('Failed to copy phone: ', err));
   };
   return (
-    <Container id='contact' className='py-16 lg:py-24'>
+    <Container id='contact' className='pb-12 pt-7'>
+      <Separator className='mb-[64px] mt-[24px]' />
+
       <Heading>{t('heading')}</Heading>
       <Heading2 className='mx-auto mb-8 mt-4 max-w-xl text-center'>
         {t('title')}

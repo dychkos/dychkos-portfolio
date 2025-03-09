@@ -85,8 +85,12 @@
     ]
   },
   "PostsPreview": {
-    "heading": "Sharing my thoughts",
+    "heading": "Sharing my thoughts and notes",
     "title": "Thoughts that I really want to leave here:",
+    "more": "Show more"
+  },
+  "EventsPreview": {
+    "heading": "What happened recently",
     "more": "Show more"
   },
   "GetInTouch": {
