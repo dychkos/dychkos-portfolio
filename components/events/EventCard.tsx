@@ -6,8 +6,12 @@ import { Button } from '@/components/ui/button';
 import { Link } from '@/lib/navigation';
 import type React from 'react';
 import type { Event } from '@/types/event';
+import { useLocale, useTranslations } from 'next-intl';
 
 export default function EventCard({ event }: { event: Event }) {
+  const locale = useLocale();
+  const t = useTranslations('Events');
+
   return (
     <Card className='overflow-hidden rounded-xl border-2 border-gray-100 bg-gray-50 shadow transition hover:shadow-md dark:border-gray-800 dark:bg-gray-800'>
       <div className='p-6'>
@@ -15,9 +19,12 @@ export default function EventCard({ event }: { event: Event }) {
           <div className='flex items-center justify-between'>
             <div className='flex items-center space-x-2 text-sm text-muted-foreground'>
               <CalendarDays className='h-4 w-4' />
-              <span>{formatDate(new Date(event.date))}</span>
+              <span>{formatDate(new Date(event.date), locale)}</span>
             </div>
-            <Badge variant='outline' className='dark:borer-none bg-neutral-700'>
+            <Badge
+              variant='outline'
+              className='dark:borer-none dark:bg-neutral-700'
+            >
               {event.type}
             </Badge>
           </div>
@@ -34,7 +41,7 @@ export default function EventCard({ event }: { event: Event }) {
                   target='_blank'
                   rel='noopener noreferrer'
                 >
-                  View Details
+                  {t('link')}
                   <ExternalLink className='ml-1 h-3.5 w-3.5' />
                 </Link>
               </Button>
