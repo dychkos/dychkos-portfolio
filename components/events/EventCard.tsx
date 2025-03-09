@@ -5,10 +5,10 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Link } from '@/lib/navigation';
 import type React from 'react';
-import type { Event } from '@/types/event';
+import type { Event as EventType } from '@prisma/client';
 import { useLocale, useTranslations } from 'next-intl';
 
-export default function EventCard({ event }: { event: Event }) {
+export default function EventCard({ event }: { event: EventType }) {
   const locale = useLocale();
   const t = useTranslations('Events');
 

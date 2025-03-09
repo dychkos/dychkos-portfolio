@@ -14,9 +14,9 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 // import { useToast } from "@/hooks/use-toast"
-import { deletePost } from './actions';
+import { deleteEvent } from '@/app/admin/events/actions';
 
-export default function DeletePostButton({ id }: { id: number }) {
+export default function DeleteEventButton({ id }: { id: number }) {
   const [open, setOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   //   const { toast } = useToast()
@@ -24,7 +24,7 @@ export default function DeletePostButton({ id }: { id: number }) {
   async function handleDelete() {
     try {
       setIsDeleting(true);
-      await deletePost(id);
+      await deleteEvent(id);
       //   toast({
       //     title: "Post deleted",
       //     description: "The post has been successfully deleted.",
@@ -55,7 +55,7 @@ export default function DeletePostButton({ id }: { id: number }) {
             <AlertDialogTitle>Are you sure?</AlertDialogTitle>
             <AlertDialogDescription>
               This action cannot be undone. This will permanently delete the
-              post.
+              event.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

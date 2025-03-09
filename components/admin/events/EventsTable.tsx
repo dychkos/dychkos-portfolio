@@ -3,7 +3,7 @@ import { formatDistanceToNow } from 'date-fns';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { Pencil } from 'lucide-react';
-import DeletePostButton from '@/app/admin/posts/delete-post-button';
+import DeleteEventButton from '@/components/admin/events/EventDeleteButton';
 
 export default async function EventsTable() {
   const events = await prisma.event.findMany({
@@ -74,7 +74,7 @@ export default async function EventsTable() {
                       <Pencil className='h-4 w-4' />
                     </Link>
                   </Button>
-                  {/*<DeletePostButton id={post.id} />*/}
+                  <DeleteEventButton id={event.id} />
                 </div>
               </td>
             </tr>

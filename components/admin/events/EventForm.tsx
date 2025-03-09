@@ -105,6 +105,43 @@ export function EventForm({ event }: EventFormProps) {
 
           <div className='space-y-2'>
             <label
+              htmlFor='title_en'
+              className='text-sm font-medium text-gray-700 dark:text-gray-300'
+            >
+              Title in English
+            </label>
+            <Input
+              id='title_en'
+              name='title_en'
+              defaultValue={event?.title_en || ''}
+              className={errors?.title_en ? 'border-red-500' : ''}
+            />
+            {errors?.title_en && (
+              <p className='text-sm text-red-500'>{errors.title_en[0]}</p>
+            )}
+          </div>
+
+          <div className='space-y-2'>
+            <label
+              htmlFor='description_en'
+              className='text-sm font-medium text-gray-700 dark:text-gray-300'
+            >
+              Description in English
+            </label>
+            <Textarea
+              id='description_en'
+              name='description_en'
+              rows={10}
+              defaultValue={event?.description_en || ''}
+              className={errors?.description_en ? 'border-red-500' : ''}
+            />
+            {errors?.description_en && (
+              <p className='text-sm text-red-500'>{errors.description_en[0]}</p>
+            )}
+          </div>
+
+          <div className='space-y-2'>
+            <label
               htmlFor='link'
               className='text-sm font-medium text-gray-700 dark:text-gray-300'
             >

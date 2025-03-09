@@ -17,7 +17,9 @@ type EventFormData = z.infer<typeof EventSchema>;
 
 export async function createEvent(formData: FormData) {
   const title = formData.get('title') as string;
+  const title_en = formData.get('title_en') as string;
   const description = formData.get('description') as string;
+  const description_en = formData.get('description_en') as string;
   const link = formData.get('link') as string;
   const type = formData.get('type') as string;
   const date = formData.get('date') as string;
@@ -25,6 +27,8 @@ export async function createEvent(formData: FormData) {
   const validatedFields = EventSchema.safeParse({
     title,
     description,
+    title_en,
+    description_en,
     link,
     type,
     date,
@@ -41,6 +45,8 @@ export async function createEvent(formData: FormData) {
       data: {
         title,
         description,
+        title_en,
+        description_en,
         link,
         type,
         date,
@@ -60,7 +66,9 @@ export async function createEvent(formData: FormData) {
 
 export async function updateEvent(id: number, formData: FormData) {
   const title = formData.get('title') as string;
+  const title_en = formData.get('title_en') as string;
   const description = formData.get('description') as string;
+  const description_en = formData.get('description_en') as string;
   const link = formData.get('link') as string;
   const type = formData.get('type') as string;
   const date = formData.get('date') as string;
@@ -68,6 +76,8 @@ export async function updateEvent(id: number, formData: FormData) {
   const validatedFields = EventSchema.safeParse({
     title,
     description,
+    title_en,
+    description_en,
     link,
     type,
     date,
@@ -85,6 +95,8 @@ export async function updateEvent(id: number, formData: FormData) {
       data: {
         title,
         description,
+        title_en,
+        description_en,
         link,
         type,
         date,

@@ -3,7 +3,7 @@ import { formatDistanceToNow } from 'date-fns';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { Pencil } from 'lucide-react';
-import DeletePostButton from '@/app/admin/posts/delete-post-button';
+import DeletePostButton from '@/components/admin/posts/PostDeleteButton';
 
 export default async function PostsTable() {
   const posts = await prisma.post.findMany({
