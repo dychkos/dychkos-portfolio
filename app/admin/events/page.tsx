@@ -18,7 +18,7 @@ export default function AdminEventsPage() {
         </Button>
       </div>
 
-      <div className='overflow-hidden rounded-lg bg-white shadow dark:bg-gray-800'>
+      <div className='max-w-[1200px] overflow-auto rounded-lg bg-white shadow dark:bg-gray-800'>
         <Suspense
           fallback={<div className='p-4 text-center'>Loading events...</div>}
         >

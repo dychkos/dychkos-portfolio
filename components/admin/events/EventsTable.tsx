@@ -48,14 +48,14 @@ export default async function EventsTable() {
             >
               <td className='whitespace-nowrap px-6 py-4'>
                 <div className='max-w-md truncate text-sm font-bold text-gray-500 dark:text-gray-400'>
-                  {event.title?.substring(0, 100) || 'No content'}
+                  {event.title?.substring(0, 80) || 'No content'}
                 </div>
                 <div className='max-w-md truncate text-sm text-gray-500 dark:text-gray-400'>
-                  {event.description?.substring(0, 100) || 'No content'}
+                  {event.description?.substring(0, 80) || 'No content'}
                 </div>
               </td>
               <td className='whitespace-nowrap px-6 py-4 text-sm text-gray-500 dark:text-gray-400'>
-                {event.link?.substring(0, 45) || 'No link'}
+                {event.link?.substring(0, 25) || 'No link'}
               </td>
               <td className='whitespace-nowrap px-6 py-4 text-sm text-gray-500 dark:text-gray-400'>
                 {event.type}
