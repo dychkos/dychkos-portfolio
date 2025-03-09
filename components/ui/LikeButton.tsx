@@ -22,6 +22,7 @@ const LikeButton: React.FC<LikeButtonProps> = ({
           {
             'cursor-default bg-rose-50 text-rose-600 dark:bg-rose-50': isLiked,
             'pointer-events-none': loading,
+            'opacity-50': loading,
           }
         )}
       >
