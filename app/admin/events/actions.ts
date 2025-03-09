@@ -60,9 +60,7 @@ export async function createEvent(formData: FormData) {
     };
   }
 
-  revalidatePath('/admin/events');
-  revalidatePath('/ua');
-  revalidatePath('/en');
+  await revalidatePostCache();
   redirect('/admin/events');
 }
 
@@ -112,7 +110,7 @@ export async function updateEvent(id: number, formData: FormData) {
     };
   }
 
-  revalidatePath('/admin/events');
+  await revalidatePostCache();
   redirect('/admin/events');
 }
 
@@ -125,7 +123,15 @@ export async function deleteEvent(id: number) {
     throw new Error('Failed to delete event');
   }
 
-  revalidatePath('/admin/events');
+  await revalidatePostCache();
 
   return { success: true };
+}
+
+export async function revalidatePostCache() {
+  revalidatePath('/admin/events');
+  revalidatePath('/ua');
+  revalidatePath('/en');
+
+  revalidatePath('/posts');
 }

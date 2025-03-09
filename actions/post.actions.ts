@@ -1,7 +1,7 @@
 'use server';
 
-import { revalidatePath } from 'next/cache';
-import { prisma } from '@/lib/prisma'; // Adjust this import based on your project structure
+import { prisma } from '@/lib/prisma';
+import { revalidatePostCache } from '@/app/admin/events/actions';
 
 export async function togglePostLike(
   postId: number,
@@ -9,10 +9,8 @@ export async function togglePostLike(
   isLiked: boolean
 ) {
   try {
-    // Calculate new likes count
     const newLikesCount = isLiked ? currentLikes - 1 : currentLikes + 1;
 
-    // Update the post in the database
     const updatedPost = await prisma.post.update({
       where: { id: postId },
       data: {
@@ -20,10 +18,8 @@ export async function togglePostLike(
       },
     });
 
-    // Revalidate the posts path to update any cached data
-    revalidatePath('/posts');
+    await revalidatePostCache();
 
-    // Return the updated post data
     return {
       success: true,
       likesCount: updatedPost.likesCount,

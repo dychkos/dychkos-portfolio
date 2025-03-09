@@ -37,7 +37,7 @@ export async function createPost(formData: FormData) {
     };
   }
 
-  revalidatePath('/admin/posts');
+  revalidatePostCache();
   redirect('/admin/posts');
 }
 
@@ -68,7 +68,7 @@ export async function updatePost(id: number, formData: FormData) {
     };
   }
 
-  revalidatePath('/admin/posts');
+  revalidatePostCache();
   redirect('/admin/posts');
 }
 
@@ -82,7 +82,13 @@ export async function deletePost(id: number) {
     throw new Error('Failed to delete post');
   }
 
-  revalidatePath('/admin/posts');
+  revalidatePostCache();
 
   return { success: true };
+}
+
+function revalidatePostCache() {
+  revalidatePath("/admin/posts'");
+  revalidatePath('/ua');
+  revalidatePath('/en');
 }
