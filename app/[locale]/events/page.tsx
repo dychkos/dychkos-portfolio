@@ -1,26 +1,9 @@
 import Container from '@/components/Container';
 import EventCard from '@/components/events/EventCard';
-import type { Event } from '@prisma/client';
-import prisma from '@/lib/prisma';
 import { getTranslations, unstable_setRequestLocale } from 'next-intl/server';
 import { Suspense } from 'react';
-import { CalendarDays, Clock, MapPin } from 'lucide-react';
-
-const getEvents = async (): Promise<Event[]> => {
-  try {
-    return await prisma.event.findMany({
-      orderBy: [
-        {
-          date: 'asc', // Show upcoming events first
-        },
-      ],
-      take: 6, // Limit to 6 events
-    });
-  } catch (error) {
-    console.error('Failed to fetch events:', error);
-    return [];
-  }
-};
+import { CalendarDays } from 'lucide-react';
+import { getEvents } from '@/actions/event.action';
 
 interface EventsPageProps {
   params: {
@@ -47,7 +30,7 @@ export default async function EventsPage({
       </div>
 
       <Suspense fallback={<EventsLoading />}>
-        <EventsList />
+        <EventsList locale={locale} />
       </Suspense>
     </Container>
   );
@@ -66,8 +49,8 @@ function EventsLoading() {
   );
 }
 
-async function EventsList() {
-  const events = await getEvents();
+async function EventsList({ locale }: { locale: string }) {
+  const events = await getEvents(20, locale);
 
   if (events.length === 0) {
     return (

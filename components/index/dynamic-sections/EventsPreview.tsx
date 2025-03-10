@@ -1,44 +1,20 @@
 import { getTranslations } from 'next-intl/server';
-import { CalendarDays, ExternalLink } from 'lucide-react';
-import { formatDate } from '@/lib/utils';
 import { Link } from '@/lib/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import Heading from '@/components/partials/Heading';
 import type React from 'react';
-import type { Event as EventType } from '@prisma/client';
 import EventCard from '@/components/events/EventCard';
-import prisma from '@/lib/prisma';
 import { useLocale } from 'next-intl';
+import { getEvents } from '@/actions/event.action';
 
 interface EventPreviewProps {
   limit?: number;
   showHeading?: boolean;
 }
 
-async function getEvents(limit = 3, locale: string): Promise<EventType[]> {
-  // Get all events with all fields
-  const events = await prisma.event.findMany({
-    orderBy: {
-      createdAt: 'desc',
-    },
-    take: limit,
-  });
-
-  if (locale === 'en') {
-    return events.map((event) => ({
-      ...event,
-      title: event.title_en,
-      description: event.description_en,
-    }));
-  }
-
-  return events;
-}
-
 export default async function EventsPreview({
-  limit = 4,
+  limit = 2,
   showHeading = true,
 }: EventPreviewProps) {
   const locale = useLocale();
