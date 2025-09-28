@@ -14,10 +14,8 @@ export default async function LoginPage({
 }: {
   searchParams: { callbackUrl?: string; error?: string };
 }) {
-  // Check if user is already logged in
   const session = await getServerSession(authOptions);
 
-  // If user is already logged in and has admin role, redirect to admin
   if (session?.user?.role === 'ADMIN') {
     redirect(searchParams.callbackUrl || '/admin');
   }

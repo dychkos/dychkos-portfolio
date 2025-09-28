@@ -122,5 +122,20 @@
   "Posts": {
     "title": "Mini blog",
     "text": "You won't find anything particularly brilliant here. I'm sharing what matters to me."
+  },
+  "Blog": {
+    "noPostsTitle": "No posts available",
+    "noPostsFound": "Please check back later",
+    "readingTime": "min read",
+    "index": {
+      "title": "Articles",
+      "text": "Featuring useful insights",
+      "postCount": "Posts"
+    },
+    "blogPage": {
+      "backToBlog": "Back to Blog",
+      "author": "Written by",
+      "publishedOn": "Published"
+    }
   }
 }

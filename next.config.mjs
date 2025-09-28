@@ -60,6 +60,6 @@ const configWithRewrites = {
   },
 };
 
-const withNextIntl = createNextIntlPlugin();
+const withNextIntl = createNextIntlPlugin('./lib/i18n.tsx');
 
 export default withNextIntl(configWithRewrites);
