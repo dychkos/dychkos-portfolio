@@ -52,8 +52,16 @@
     "title": "Ось короткий підсумок мого останнього досвіду:",
     "companies": [
       {
+        "name": "Appflame",
+        "period": "Черв. 2025 – дотепер",
+        "role": "Middle PHP Software Engineer",
+        "responsibilities": [
+          "Робота з платежами в команді монетизації"
+        ]
+      },
+      {
         "name": "NewGen",
-        "period": "Квіт. 2024 - Сьогодні",
+        "period": "Квіт. 2024 - Черв. 2025",
         "role": "Middle Full Stack Developer",
         "responsibilities": [
           "Оптимізація та кешуванням при роботі з BigData базами даних.",

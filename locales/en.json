@@ -52,8 +52,16 @@
     "title": "Here's a brief summary of my recent experience:",
     "companies": [
       {
+        "name": "Appflame",
+        "period": "Jun 2025 – Present",
+        "role": "Middle PHP Software Engineer",
+        "responsibilities": [
+          "Working with payments in the Monetization team"
+        ]
+      },
+      {
         "name": "NewGen",
-        "period": "Apr. 2024 - Present",
+        "period": "Apr. 2024 - Jun. 2025",
         "role": "Middle Full Stack Developer",
         "responsibilities": [
           "Optimization and caching when working with BigData databases.",

@@ -14,7 +14,7 @@ const Experience: React.FC = () => {
       <Container>
         <Heading>{t('heading')}</Heading>
         <Heading2 className='mb-8 mt-4 text-center'>{t('title')}</Heading2>
-        {Array(3)
+        {Array(4)
           .fill(false)
           .map((el, index) => {
             return (
