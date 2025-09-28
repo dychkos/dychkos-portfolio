@@ -52,12 +52,7 @@ export default async function Index({ params: { locale } }: IndexProps) {
       <About />
       <Skills />
       <Experience />
-      <ContentWrapper
-        recentEventsTitle={t('recentEvents')}
-        notesTitle={t('myNotes')}
-        postsContent={<PostsPreview />}
-        eventsContent={<EventsPreview />}
-      />
+      <EventsPreview />
       {/*<PostsPreview />*/}
       {/*<Work />*/}
     </main>
