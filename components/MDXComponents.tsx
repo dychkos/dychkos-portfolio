@@ -39,14 +39,22 @@ export const mdxComponents: MDXComponents = {
   ),
   code: ({ className, children }) => {
     const isInlineCode = !className;
+
     if (isInlineCode) {
       return (
-        <code className='text-blog-accent rounded bg-muted px-2 py-1 font-mono text-sm'>
+        <code className='text-blog-accent dark:text-blog-accent-light rounded border border-slate-200 bg-slate-100 px-2 py-1 font-mono text-sm text-slate-900 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100'>
           {children}
         </code>
       );
     }
-    return <code className={className}>{children}</code>;
+
+    return (
+      <code
+        className={` ${className} bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100`}
+      >
+        {children}
+      </code>
+    );
   },
   pre: ({ children }) => (
     <pre className='bg-code-background text-code-foreground my-6 overflow-x-auto rounded-lg border p-6'>

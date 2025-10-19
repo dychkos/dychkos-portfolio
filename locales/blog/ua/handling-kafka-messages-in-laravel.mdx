@@ -1,0 +1,386 @@
+---
+title: "Обробка повідомлень Kafka у Laravel"
+description: "Дізнайтеся, як ефективно створювати та отримувати повідомлення Kafka у Laravel, з покроковими прикладами."
+date: "2025-10-19"
+tags: ["Apache Kafka", "Брокер повідомлень"]
+readingTime: 10
+author: "Сергій Дичко"
+---
+
+Ця стаття пропонує покроковий посібник із запуску Kafka локально разом із Laravel та Docker. Усі приклади коду та повноцінний робочий проєкт доступні на GitHub: [https://github.com/dychkos/laravel-kafka](https://github.com/dychkos/laravel-kafka).
+
+## Зміст
+
+- [Встановлення та налаштування](#installation-and-configuration)
+- [Провайдер та сервіс для роботи з Kafka](#provider-and-service-for-handling-kafka)
+- [Відправка та отримання повідомлень Kafka у Laravel](#producing-and-consuming-kafka-messages-in-laravel)
+- [Наступні кроки та найкращі практики](#next-steps-and-best-practices)
+
+## Чому вашому застосунку потрібен Kafka
+
+Kafka — це потужний брокер повідомлень, який допомагає вашому застосунку ефективно та надійно обробляти потоки даних. Він дозволяє різним частинам системи спілкуватися асинхронно, роблячи ваш додаток більш масштабованим і стійким. Завдяки Kafka повідомлення зберігаються і доставляються у правильному порядку, що знижує ризик втрати або дублювання даних. Це робить його ідеальним для архітектур, орієнтованих на події, мікросервісів або будь-яких систем, що обробляють великі обсяги даних у режимі реального часу.
+
+## Встановлення та налаштування
+
+Ви можете клонувати репозиторій на GitHub, щоб отримати повноцінний робочий проєкт, але ось основні кроки, які потрібно виконати, щоб мати приклад Kafka у Laravel.
+
+Спочатку потрібно переконатися, що розширення Kafka увімкнено для вашого PHP-застосунку. Ми будемо використовувати пакет arnaud-lb/php-rdkafka. У вашому PHP Dockerfile слід встановити необхідну бібліотеку та розширення Kafka наступним чином:
+
+Щоб встановити бібліотеку Kafka:
+
+```
+    RUN apt-get update && apt-get install -y \
+    librdkafka-dev
+```
+
+Потім встановіть та увімкніть PHP-розширення Kafka:
+
+```
+    RUN pecl install rdkafka-6.0.5 && \
+        docker-php-ext-enable rdkafka
+
+```
+
+[Повний приклад Dockerfile.](https://github.com/dychkos/laravel-kafka/blob/master/docker/8.4/Dockerfile)
+
+Після цього ваш PHP-контейнер буде готовий до роботи з Kafka.
+
+Далі давайте додамо сервіс Kafka у наш файл Docker Compose. Ця конфігурація забезпечує локальний запуск Kafka та можливість спілкування з вашим застосунком Laravel.
+
+```
+kafka:
+    image: confluentinc/cp-kafka:7.8.0
+    container_name: kafka
+    ports:
+        - "9092:9092"
+    environment:
+        KAFKA_NODE_ID: 1 # Unique ID for this broker
+        KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT # Maps listeners to protocols
+        KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092 # How clients connect
+        KAFKA_PROCESS_ROLES: broker,controller # Defines the roles of this Kafka instance
+        KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1 # Required for offset storage
+        KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:29093 # Kafka controller quorum configuration
+        KAFKA_LISTENERS: PLAINTEXT://kafka:29092,CONTROLLER://kafka:29093,PLAINTEXT_HOST://0.0.0.0:9092 # Actual listener ports
+        KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT # Inter-broker communication
+        KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER # Controller listener name
+        CLUSTER_ID: 'EmptNWtoR4GGWx-BH6nGLQ' # Unique cluster ID
+    volumes:
+        - kafka-data:/var/lib/kafka/data
+    networks:
+        - kafka-net
+    healthcheck:
+        test: ["CMD", "kafka-broker-api-versions", "--bootstrap-server", "localhost:9092"]
+        interval: 10s
+        timeout: 5s
+        retries: 5
+```
+
+Щоб легше візуалізувати та взаємодіяти з повідомленнями Kafka, можна додати сервіс Kafka UI:
+
+```
+kafka-ui:
+    image: kafbat/kafka-ui:main
+    container_name: kafka-ui
+    ports:
+        - "8080:8080"
+    environment:
+        DYNAMIC_CONFIG_ENABLED: "true"
+        KAFKA_CLUSTERS_0_NAME: local
+        KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:29092
+    depends_on:
+        - kafka
+    networks:
+        - kafka-net
+```
+Ця конфігурація надає веб-інтерфейс за адресою `http://localhost:8080` для моніторингу тем, повідомлень та споживачів.
+
+[Приклад docker-compose.](https://github.com/dychkos/laravel-kafka/blob/master/compose.yaml)
+
+**Налаштування Laravel для підключення до Kafka**
+
+Щоб підключити ваш застосунок Laravel до Kafka, спочатку потрібно визначити необхідні змінні середовища. Додайте наступне у файл .env::
+```
+    KAFKA_BROKERS=kafka:29092
+    KAFKA_GROUP_ID=laravel-consumer-group
+    KAFKA_CLIENT_ID=laravel-client
+    KAFKA_AUTO_OFFSET_RESET=earliest
+    KAFKA_AUTO_COMMIT=true
+    KAFKA_SESSION_TIMEOUT=6000
+    KAFKA_SOCKET_TIMEOUT=60000
+```
+Далі створіть файл конфігурації `config/kafka.php`:
+```
+    return [
+        'brokers' => env('KAFKA_BROKERS', 'localhost:9092'),
+        'group_id' => env('KAFKA_GROUP_ID', 'laravel-consumer-group'),
+        'client_id' => env('KAFKA_CLIENT_ID', 'laravel-client'),
+        'auto_offset_reset' => env('KAFKA_AUTO_OFFSET_RESET', 'earliest'),
+        'enable_auto_commit' => env('KAFKA_AUTO_COMMIT', true),
+        'session_timeout_ms' => env('KAFKA_SESSION_TIMEOUT', 6000),
+        'socket_timeout_ms' => env('KAFKA_SOCKET_TIMEOUT', 60000),
+    ];
+```
+
+## Провайдер та сервіс для роботи з Kafka
+
+Тепер, коли Kafka запущено, настав час підключити наш застосунок Laravel та керувати створенням і споживанням повідомлень. Почнемо зі створення KafkaProvider, який налаштовує базову конфігурацію для виробництва та споживання повідомлень.
+
+```
+    namespace App\Components\Kafka;
+
+    use App\Components\Kafka\Interfaces\KafkaServiceInterface;
+    use Illuminate\Support\ServiceProvider;
+    use RdKafka\Conf;
+    use RdKafka\KafkaConsumer;
+    use RdKafka\Producer;
+
+    class KafkaProvider extends ServiceProvider
+    {
+        public function register(): void
+        {
+            $this->app->singleton('kafka.producer', function () {
+                return $this->createProducer();
+            });
+
+            $this->app->singleton('kafka.consumer', function () {
+                return $this->createConsumer();
+            });
+
+        $this->app->singleton(KafkaServiceInterface::class, function ($app) {
+            return new KafkaService(
+                $app->make('kafka.producer'),
+                $app->make('kafka.consumer')
+            );
+        });
+    }
+
+    protected function createProducer(): Producer
+    {
+        $config = config('kafka');
+        $conf = new Conf();
+
+        $conf->set('metadata.broker.list', $config['brokers']);
+        $conf->set('client.id', $config['client_id']);
+        $conf->set('socket.timeout.ms', $config['socket_timeout_ms']);
+
+        return new Producer($conf);
+    }
+
+    protected function createConsumer(): KafkaConsumer
+    {
+        $config = config('kafka');
+        $conf = new Conf();
+
+        $conf->set('metadata.broker.list', $config['brokers']);
+        $conf->set('group.id', $config['group_id']);
+        $conf->set('auto.offset.reset', $config['auto_offset_reset']);
+        $conf->set('enable.auto.commit', $config['enable_auto_commit']);
+        $conf->set('session.timeout.ms', $config['session_timeout_ms']);
+        $conf->set('socket.timeout.ms', $config['socket_timeout_ms']);
+
+        return new KafkaConsumer($conf);
+    }
+    }
+```
+
+Цей провайдер створює два основні об’єкти: `producer` для відправки повідомлень та `consumer` для їхнього отримання. Обидва реєструються як сінглтони, щоб упродовж усього застосунку використовувалася одна й та сама інстанція. Додатково ми реєструємо верхньорівневий `KafkaService`, який обгортає ці об’єкти та забезпечує зручний інтерфейс для різних сценаріїв роботи з повідомленнями.
+
+Додайте провайдер до `bootstrap/providers.php`:
+
+```
+    return [
+    	// ...
+    	App\Providers\KafkaProvider::class,
+    ];
+```
+
+**Kafka Service**
+
+Клас `KafkaService` є верхнім рівнем для керування повідомленнями Kafka. Він надає методи для публікації окремих повідомлень, публікації пакетів повідомлень та споживання повідомлень із тем. Ось приклад:
+```
+    class KafkaService implements KafkaServiceInterface
+    {
+        private Producer $producer;
+        private KafkaConsumer $consumer;
+
+    public function __construct(Producer $producer, KafkaConsumer $consumer)
+    {
+        $this->producer = $producer;
+        $this->consumer = $consumer;
+    }
+
+    public function publishMessage(KafkaTopicEnum $topic, array $payload, ?string $key = null): void
+    {
+        $topicProducer = $this->producer->newTopic($topic->value);
+        $topicProducer->produce(RD_KAFKA_PARTITION_UA, 0, json_encode($payload), $key);
+
+        for ($i = 0; $i < 10; $i++) {
+            if ($this->producer->flush(1000) === 0) break;
+        }
+    }
+
+    public function publishBatch(KafkaTopicEnum $topic, array $messages): void
+    {
+        $topicProducer = $this->producer->newTopic($topic->value);
+
+        foreach ($messages as $message) {
+            $payload = is_array($message['payload']) ? json_encode($message['payload']) : $message['payload'];
+            $key = $message['key'] ?? null;
+            $topicProducer->produce(RD_KAFKA_PARTITION_UA, 0, $payload, $key);
+        }
+
+        $remaining = $this->producer->flush(30000);
+        if ($remaining > 0) Log::warning("Failed to flush {$remaining} messages");
+    }
+
+    public function consume(KafkaTopicEnum|array $topics, callable $callback, int $timeout = 120000, ?int $maxMessages = null): void
+    {
+        $topics = is_array($topics) ? $topics : [$topics->value];
+        $this->consumer->subscribe($topics);
+
+        $count = 0;
+
+        try {
+            while (true) {
+                $message = $this->consumer->consume($timeout);
+
+                match ($message->err) {
+                    RD_KAFKA_RESP_ERR_NO_ERROR => $this->handleMessage($message, $callback),
+                    RD_KAFKA_RESP_ERR__TIMED_OUT => null,
+                    RD_KAFKA_RESP_ERR__PARTITION_EOF => null,
+                    default => Log::error('Kafka consumer error: '.$message->errstr()),
+                };
+
+                if ($maxMessages && ++$count >= $maxMessages) break;
+            }
+        } finally {
+            $this->consumer->unsubscribe();
+        }
+    }
+
+    private function handleMessage(Message $message, callable $callback): void
+    {
+        try {
+            $payload = json_decode($message->payload, true) ?? $message->payload;
+            $callback([
+                'topic' => $message->topic_name,
+                'partition' => $message->partition,
+                'offset' => $message->offset,
+                'key' => $message->key,
+                'payload' => $payload,
+                'timestamp' => $message->timestamp,
+            ]);
+            Log::debug('Processed message', ['topic' => $message->topic_name, 'offset' => $message->offset]);
+        } catch (\Exception $e) {
+            Log::error('Error processing message: '.$e->getMessage(), ['topic' => $message->topic_name, 'offset' => $message->offset]);
+            throw $e;
+        }
+    }
+
+    public function getProducer(): Producer { return $this->producer; }
+    public function getConsumer(): KafkaConsumer { return
+
+    $this->consumer;
+    }
+    }
+```
+
+**Огляд методів:**
+
+publishMessage відправляє одне повідомлення в тему та одразу його флашить, щоб забезпечити доставку. publishBatch дозволяє відправляти декілька повідомлень одночасно, що ефективніше для масових операцій, але потребує більшого часу для флашу. consume підписується на одну або кілька тем і обробляє повідомлення за допомогою callback-функції. handleMessage є внутрішнім допоміжним методом для декодування повідомлень та обробки логування й помилок.
+
+Таке налаштування забезпечує чистий і повторно використовуваний інтерфейс для роботи з Kafka у Laravel, дозволяючи легко відправляти та отримувати повідомлення без повторення шаблонного коду.
+
+## Відправка та отримання повідомлень Kafka у Laravel
+
+Тепер, коли базова конфігурація Kafka готова, давайте створимо повноцінний приклад, де ми будемо відправляти та отримувати повідомлення. Доброю практикою є визначати теми Kafka у вигляді enum, щоб легко ними керувати та уникати помилок у назвах:
+
+```
+    namespace App\Components\Kafka\Enums;
+
+    enum KafkaTopicEnum: string
+    {
+        case DEFAULT = 'default';
+        case USER_REGISTRATION = 'user_registration';
+    }
+```
+
+Далі ми створюємо два маршрути та контролер для відправки повідомлень:
+
+```
+    class KafkaTestController extends Controller
+    {
+        public function publishMessage(KafkaServiceInterface $kafkaService): JsonResponse
+        {
+            $kafkaService->publishMessage(
+                topic: KafkaTopicEnum::USER_REGISTRATION,
+                payload: [
+                    'user_id' => 123,
+                    'action' => 'user.created',
+                    'timestamp' => now()->toIso8601String(),
+                    'data' => ['name' => 'John Doe', 'email' => 'john@example.com']
+                ],
+                key: 'user_123'
+            );
+
+        return response()->json(['status' => 'published']);
+    }
+
+    public function publishBatch(KafkaServiceInterface $kafkaService): JsonResponse
+    {
+        $kafkaService->publishBatch(KafkaTopicEnum::DEFAULT, [
+            ['payload' => ['event' => 'event1', 'data' => 'value1'], 'key' => 'event_1'],
+            ['payload' => ['event' => 'event2', 'data' => 'value2'], 'key' => 'event_2'],
+            ['payload' => ['event' => 'event3', 'data' => 'value3'], 'key' => 'event_3'],
+        ]);
+
+        return response()->json(['status' => 'batch published']);
+    }
+    }
+
+```
+Коли користувач відвідує /kafka/publish, одне повідомлення надсилається до теми USER_REGISTRATION. Відвідування /kafka/publishBatch надсилає кілька повідомлень до теми DEFAULT. Параметр key допомагає Kafka організовувати повідомлення всередині партицій.
+
+**Створення споживача Kafka**
+
+Щоб споживати повідомлення, рекомендований підхід — створити команду Laravel, яка працює як daemon. Цей процес постійно слухає нові повідомлення з теми:
+```
+    class KafkaConsumeCommand extends Command
+    {
+        protected $signature = 'kafka:consume {topic} {--timeout=120000} {--max-messages=}';
+        protected $description = 'Consume messages from Kafka topic';
+
+        public function handle(KafkaServiceInterface $kafkaService)
+        {
+        $topic = $this->argument('topic');
+        $error = $this->validatePrompt($topic, ['required', 'string', Rule::enum(KafkaTopicEnum::class)]);
+
+        if ($error) {
+            $this->error("Invalid topic: {$topic}");
+            return CommandAlias::FAILURE;
+        }
+
+        $timeout = $this->option('timeout');
+        $maxMessages = $this->option('max-messages');
+
+        $this->info("Consuming from topic: {$topic}");
+
+        $kafkaService->consume(
+            KafkaTopicEnum::tryFrom($topic),
+            function ($message) {
+                $this->line(json_encode($message, JSON_PRETTY_PRINT));
+            },
+            timeout: (int) $timeout,
+            maxMessages: $maxMessages ? (int) $maxMessages : null
+        );
+    }
+    }
+```
+
+Усередині цієї команди Laravel перевіряє правильність теми, а потім викликає метод consume сервісу Kafka. Сервіс підписується на вказану тему та постійно отримує повідомлення. Для кожного отриманого повідомлення переданий callback виводить його у зручному форматі JSON. Необов’язкові параметри timeout та max-messages дозволяють контролювати, як довго споживач слухає повідомлення і скільки повідомлень обробити перед зупинкою.
+
+З таким налаштуванням ваш застосунок Laravel може як відправляти повідомлення у теми Kafka, так і запускати постійного споживача для обробки вхідних повідомлень, забезпечуючи повний потік роботи, орієнтований на повідомлення.
+## Наступні кроки та найкращі практики та Best Practices
+Тепер, коли ваш застосунок Laravel може відправляти та отримувати повідомлення Kafka, існує кілька практик, яких варто дотримуватися для забезпечення надійності та підтримуваності системи. Спершу завжди визначайте ваші теми Kafka за допомогою enum або констант, щоб уникати помилок у назвах та полегшити керування темами. Для продакшн-систем варто використовувати кілька партицій для високої пропускної здатності та групи споживачів, щоб масштабувати обробку повідомлень на кілька воркерів.
+
+Переконайтеся, що помилки та повторні спроби обробляються коректно. У сервісі Kafka вже реалізовано логування, але у продакшні можна додати теми dead-letter для повідомлень, які постійно не вдається обробити. Моніторьте ваш кластер Kafka за допомогою інструментів на кшталт Kafka UI або Prometheus, щоб відстежувати затримку повідомлень, стан брокерів і продуктивність споживачів.
