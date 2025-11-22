@@ -3,6 +3,7 @@
     "about": "About",
     "experience": "Experience",
     "contact": "Contact",
+    "blog": "Blog",
     "get-cv": "Download CV",
     "switch-theme": "Switch theme"
   },
@@ -95,9 +96,9 @@
     ]
   },
   "PostsPreview": {
-    "heading": "Sharing my thoughts and notes",
-    "title": "Thoughts that I really want to leave here:",
-    "more": "Show more"
+    "heading": "Latest in my tech notes",
+    "title": "Recent topics I’ve been exploring:",
+    "more": "View more"
   },
   "EventsPreview": {
     "heading": "What happened recently",

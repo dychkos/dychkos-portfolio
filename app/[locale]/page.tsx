@@ -3,12 +3,9 @@ import About from '@/components/index/About';
 import Skills from '@/components/index/Skills';
 import Experience from '@/components/index/Experience';
 import { getTranslations, unstable_setRequestLocale } from 'next-intl/server';
-import ContentPreview from '@/components/index/dynamic-sections/ContentPreview';
-import PostsPreview from '@/components/index/dynamic-sections/PostsPreview';
-import EventsPreview from '@/components/index/dynamic-sections/EventsPreview';
 import React from 'react';
 import { Metadata } from 'next';
-import ContentWrapper from '@/components/index/dynamic-sections/ContentPreview';
+import PostsPreview from '@/components/index/PostsPreview';
 
 interface IndexProps {
   params: {
@@ -52,8 +49,7 @@ export default async function Index({ params: { locale } }: IndexProps) {
       <About />
       <Skills />
       <Experience />
-      <EventsPreview />
-      {/*<PostsPreview />*/}
+      <PostsPreview />
       {/*<Work />*/}
     </main>
   );

@@ -47,6 +47,11 @@ const Header: React.FC = () => {
             </Link>
           </li>
           <li className='text-base font-medium text-gray-600 dark:text-gray-300'>
+            <Link href={`/blog`} onClick={hide}>
+              {t('blog')}
+            </Link>
+          </li>
+          <li className='text-base font-medium text-gray-600 dark:text-gray-300'>
             <Link href='/#contact' onClick={hide}>
               {t('contact')}
             </Link>
