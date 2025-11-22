@@ -13,6 +13,9 @@ import { LiaTelegram } from 'react-icons/lia';
 import Body1 from '@/components/ui/typography/Body1';
 import { Separator } from '@/components/ui/separator';
 
+const EMAIL = 'dychkos@proton.me';
+const PHONE = "'+380734042536";
+
 export const GetInTouch: React.FC = () => {
   const [copied, setCopied] = useState<boolean>(false);
 
@@ -29,9 +32,8 @@ export const GetInTouch: React.FC = () => {
   const t = useTranslations('GetInTouch');
 
   const handleCopyEmail = () => {
-    const email = 'dychkos@proton.me';
     navigator.clipboard
-      .writeText(email)
+      .writeText(EMAIL)
       .then(() => {
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
@@ -40,9 +42,8 @@ export const GetInTouch: React.FC = () => {
   };
 
   const handleCopyPhone = () => {
-    const phone = '+380734042536';
     navigator.clipboard
-      .writeText(phone)
+      .writeText(PHONE)
       .then(() => {
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
@@ -70,7 +71,7 @@ export const GetInTouch: React.FC = () => {
             title={t('email')}
           >
             <FiMail size={28} />
-            dychkosergey@gmail.com
+            {EMAIL}
             <BsCopy
               size={28}
               className='ml-2 cursor-pointer hover:text-blue-500'
