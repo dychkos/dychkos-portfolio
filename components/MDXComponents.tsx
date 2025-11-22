@@ -3,19 +3,11 @@ import Image from 'next/image';
 
 import { Hash } from 'lucide-react';
 import React from 'react';
+import CodeBlock from '@/components/ui/CodeBlock';
 
 interface HeadingProps {
   id?: string;
   children: React.ReactNode;
-}
-
-interface HeadingProps {
-  id?: string;
-  children: React.ReactNode;
-}
-
-interface HeadingProps extends React.HTMLAttributes<HTMLHeadingElement> {
-  id?: string;
 }
 
 const heading = (level: 1 | 2 | 3 | 4 | 5 | 6) => {
@@ -63,34 +55,11 @@ export const mdxComponents: MDXComponents = {
       {children}
     </a>
   ),
+  pre: (props) => <CodeBlock {...props} />,
   blockquote: ({ children }) => (
     <blockquote className='border-blog-accent bg-blog-muted my-6 rounded-r-lg border-l-4 py-4 pl-6 italic text-muted-foreground'>
       {children}
     </blockquote>
-  ),
-  code: ({ className, children }) => {
-    const isInlineCode = !className;
-
-    if (isInlineCode) {
-      return (
-        <code className='text-blog-accent dark:text-blog-accent-light rounded border border-slate-200 bg-slate-100 px-2 py-1 font-mono text-sm text-slate-900 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100'>
-          {children}
-        </code>
-      );
-    }
-
-    return (
-      <code
-        className={` ${className} bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100`}
-      >
-        {children}
-      </code>
-    );
-  },
-  pre: ({ children }) => (
-    <pre className='bg-code-background text-code-foreground my-6 overflow-x-auto rounded-lg border p-6'>
-      {children}
-    </pre>
   ),
   ul: ({ children }) => (
     <ul className='mb-6 ml-6 list-disc space-y-2'>{children}</ul>

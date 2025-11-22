@@ -1,6 +1,8 @@
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import { mdxComponents } from './MDXComponents';
 import rehypeSlug from 'rehype-slug';
+import rehypePrettyCode from 'rehype-pretty-code';
+import { transformerCopyButton } from '@rehype-pretty/transformers';
 
 interface MDXContentProps {
   source: string;
@@ -14,7 +16,17 @@ export function MDXContent({ source }: MDXContentProps) {
         components={mdxComponents}
         options={{
           mdxOptions: {
-            rehypePlugins: [rehypeSlug],
+            rehypePlugins: [
+              rehypeSlug,
+              [
+                rehypePrettyCode,
+                {
+                  theme: 'nord',
+                  keepBackground: true,
+                  defaultLang: 'plaintext',
+                },
+              ],
+            ],
             remarkPlugins: [],
           },
         }}

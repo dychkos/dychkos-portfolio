@@ -27,14 +27,14 @@ First, you need to ensure the Kafka extension is enabled for your PHP applicatio
 
 To install the Kafka library:
 
-```
+```dockerfile
     RUN apt-get update && apt-get install -y \
     librdkafka-dev
 ```
 
 Then install and enable the PHP Kafka extension:
 
-```
+```dockerfile
     RUN pecl install rdkafka-6.0.5 && \
         docker-php-ext-enable rdkafka
 
@@ -46,7 +46,7 @@ After this, your PHP container will be ready to work with Kafka.
 
 Next, let’s add the Kafka service to our Docker Compose file. This setup ensures that Kafka runs locally and can communicate with your Laravel application.
 
-```
+```yaml
 kafka:
     image: confluentinc/cp-kafka:7.8.0
     container_name: kafka
@@ -76,7 +76,7 @@ kafka:
 
 To make it easier to visualize and interact with Kafka messages, you can add a Kafka UI service:
 
-```
+```yaml
 kafka-ui:
     image: kafbat/kafka-ui:main
     container_name: kafka-ui
@@ -108,7 +108,7 @@ To connect your Laravel application to Kafka, you first need to define the neces
     KAFKA_SOCKET_TIMEOUT=60000
 ```
 Next, create a `config/kafka.php` file in your Laravel project to map these environment variables for easy use in your app:
-```
+```php
     return [
         'brokers' => env('KAFKA_BROKERS', 'localhost:9092'),
         'group_id' => env('KAFKA_GROUP_ID', 'laravel-consumer-group'),
@@ -124,7 +124,7 @@ Next, create a `config/kafka.php` file in your Laravel project to map these envi
 
 Now that we have Kafka running, it’s time to connect our Laravel application and manage message production and consumption. We’ll start by creating a `KafkaProvider` that sets up the basic configuration for producing and consuming messages.
 
-```
+```php
     namespace App\Components\Kafka;
 
     use App\Components\Kafka\Interfaces\KafkaServiceInterface;
@@ -186,7 +186,7 @@ This provider creates two main entities: a `producer` for sending messages and a
 
 Add to `bootstrap/providers.php` providers array:
 
-```
+```php
     return [
     	// ...
     	App\Providers\KafkaProvider::class,
@@ -197,7 +197,7 @@ Add to `bootstrap/providers.php` providers array:
 
 The `KafkaService` class is the top layer for managing Kafka messages. It provides methods to publish individual messages, publish batches of messages, and consume messages from topics. Here’s an example:
 
-```
+```php
     class KafkaService implements KafkaServiceInterface
     {
         private Producer $producer;
@@ -295,7 +295,7 @@ This setup gives you a clean, reusable interface for Kafka messaging in Laravel,
 
 Now that we have the basic Kafka setup, let’s create a full working example where we produce and consume messages. It’s a good practice to define Kafka topics in an enum to manage them easily and avoid typos:
 
-```
+```php
     namespace App\Components\Kafka\Enums;
 
     enum KafkaTopicEnum: string
@@ -307,7 +307,7 @@ Now that we have the basic Kafka setup, let’s create a full working example wh
 
 Next, we create two routes and a controller to publish messages:
 
-```
+```php
     class KafkaTestController extends Controller
     {
         public function publishMessage(KafkaServiceInterface $kafkaService): JsonResponse
@@ -345,7 +345,7 @@ When a user visits `/kafka/publish`, a single message is sent to the `USER_REGIS
 
 To consume messages, the recommended approach is to create a Laravel command that runs as a daemon. This process continuously listens for new messages from a topic:
 
-```
+```php
     class KafkaConsumeCommand extends Command
     {
         protected $signature = 'kafka:consume {topic} {--timeout=120000} {--max-messages=}';
