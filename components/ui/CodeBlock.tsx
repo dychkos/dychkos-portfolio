@@ -32,7 +32,7 @@ export default function CodeBlock({
       <button
         disabled={isCopied}
         onClick={handleClickCopy}
-        className='absolute right-4 size-6'
+        className='absolute right-4 top-4 z-10 size-6'
       >
         {isCopied ? <Check /> : <Clipboard />}
       </button>

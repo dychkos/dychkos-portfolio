@@ -56,6 +56,7 @@ export const mdxComponents: MDXComponents = {
     </a>
   ),
   pre: (props) => <CodeBlock {...props} />,
+  code: (props) => <code {...props} className='overflow-x-auto' />,
   blockquote: ({ children }) => (
     <blockquote className='border-blog-accent bg-blog-muted my-6 rounded-r-lg border-l-4 py-4 pl-6 italic text-muted-foreground'>
       {children}

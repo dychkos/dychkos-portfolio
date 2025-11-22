@@ -2,7 +2,6 @@ import { MDXRemote } from 'next-mdx-remote/rsc';
 import { mdxComponents } from './MDXComponents';
 import rehypeSlug from 'rehype-slug';
 import rehypePrettyCode from 'rehype-pretty-code';
-import { transformerCopyButton } from '@rehype-pretty/transformers';
 
 interface MDXContentProps {
   source: string;
