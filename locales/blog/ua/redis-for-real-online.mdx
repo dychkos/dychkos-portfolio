@@ -1,0 +1,149 @@
+---
+title: "Ефективне керування онлайн-користувачами за допомогою Redis"
+description: "Дізнайтеся, як відстежувати онлайн-користувачів у режимі реального часу з Redis і Laravel, використовуючи хеші, TTL та middleware для швидких і ефективних оновлень."
+date: "2025-11-22"
+tags: ["Redis", "Laravel", "Online Users", "Realtime"]
+readingTime: 3
+author: "Сергій Дичко"
+---
+
+
+## Зміст
+
+- [Що таке Redis](#що-таке-redis)
+- [Відстеження онлайн-користувачів за допомогою Redis Hashes](#відстеження-онлайн-користувачів-за-допомогою-redis-hashes)
+- [Реалізація відстеження онлайн-користувачів у Laravel](#відстеження-онлайн-користувачів-за-допомогою-redis-hashes)
+- [Висновок](#висновок)
+
+## Що таке Redis
+
+Redis - це сховище даних у пам’яті, яке зберігає все в RAM, забезпечуючи надзвичайно швидке читання та запис. Оскільки воно працює одночасно як база даних і кеш, Redis ідеально підходить для сценаріїв з високим навантаженням, де важлива низька затримка та швидкий доступ до даних.
+
+## Відстеження онлайн-користувачів за допомогою Redis Hashes
+Сьогодні ми розглянемо, як Redis можна використати для створення швидкого і досить точного механізму відстеження онлайн-користувачів на сайті.
+
+Для цього ми будемо використовувати Redis hashes. Хеш у Redis - це структура даних, яка зіставляє поля з їхніми значеннями, подібно до словника або асоціативного масиву в інших мовах програмування. Вона дозволяє ефективно зберігати та отримувати кілька пов’язаних значень під одним ключем.
+
+Ми організуємо хеш так, щоб кожне поле відповідало одному онлайн-користувачу. Кожного разу, коли користувач здійснює дію, ми додаємо або оновлюємо його поле в хеші. Наприклад, наш хеш online_users може містити user_1, user_2 тощо.
+
+Головне тут - керування офлайн-користувачами. У Redis 7.4 з’явилася можливість встановлювати час життя (TTL, time-to-live) для окремих полів хешу. Це дозволяє автоматично видаляти користувачів, які більше неактивні.
+
+Щоб додати користувача до хешу з поточним часовим штампом, можна використати:
+```
+    HSET online_users <userId> <timestamp>
+```
+
+Щоб встановити TTL для конкретного поля, у Redis 7.0+ підтримується команда `HEXPIRE`:
+
+```
+    HEXPIRE online_users 3600 FIELDS 1 123
+```
+Тут `3600` — це TTL у секундах, а `FIELDS 1 123` встановлює час життя для поля з ID 123. Такий підхід гарантує, що `online_users` завжди відображає поточних активних користувачів без ручного очищення, що робить відстеження онлайн-активності простим та ефективним.
+
+Щоб перевірити, чи користувач зараз онлайн, можна використати:
+```
+    HEXISTS online_users <userId>
+```
+
+Щоб отримати всіх онлайн-користувачів:
+```
+    HGETALL online_users
+```
+
+Щоб підрахувати загальну кількість онлайн-користувачів:
+```
+    HLEN online_users
+```
+
+Цей механізм дозволяє ефективно керувати онлайн-користувачами в режимі реального часу. Реальну реалізацію можна адаптувати залежно від потреб вашого застосунку.
+
+## Реалізація відстеження онлайн-користувачів у Laravel
+
+Ось приклад того, як це можна реалізувати у Laravel. Наступний клас-обгортка відповідає за взаємодію з Redis у PHP:
+```php
+class UserOnlineRepository implements UserOnlineRepositoryInterface
+{
+    private const ONLINE_TTL = 300;
+    private const ONLINE_KEY = 'users_online';
+
+    private function getFullKey(): string
+    {
+        $prefix = config('database.redis.options.prefix', '');
+        return $prefix.self::ONLINE_KEY;
+    }
+
+    public function addOnline(int $userId)
+    {
+        $userId = (string) $userId;
+        Redis::command('HSET', [self::ONLINE_KEY, $userId, time()]);
+
+        $client = Redis::connection()->client();
+        $client->rawCommand(
+            'HEXPIRE',
+            $this->getFullKey(),
+            self::ONLINE_TTL,
+            'FIELDS',
+            1,
+            $userId
+        );
+    }
+
+    public function isOnline(int $userId): bool
+    {
+        $userId = (string) $userId;
+        $result = Redis::command('HEXISTS', [self::ONLINE_KEY, $userId]);
+        return (bool) $result;
+    }
+
+    public function getAllOnline(): array
+    {
+        $data = Redis::command('HGETALL', [self::ONLINE_KEY]);
+
+        if (empty($data)) {
+            return [];
+        }
+
+        $users = [];
+        for ($i = 0; $i < count($data); $i += 2) {
+            $users[] = (int) $data[$i];
+        }
+
+        return $users;
+    }
+
+    public function getTotalOnlineCount(): int
+    {
+        return (int) Redis::command('HLEN', [self::ONLINE_KEY]);
+    }
+}
+```
+
+Також можна створити глобальний middleware, який оновлюватиме статус користувача онлайн для кожного запиту, з механізмом дебаунсу, щоб уникнути надмірних записів у Redis:
+```php
+class UserOnlineMiddleware
+{
+    private const DEBOUNCE_SECONDS = 120;
+
+    public function handle(Request $request, Closure $next)
+    {
+        $user = $request->user();
+
+        if ($user) {
+            $userId = $user->id;
+
+            Cache::remember("user_online_debounce:{$userId}", self::DEBOUNCE_SECONDS, function () use ($userId) {
+                app(UserOnlineServiceInterface::class)->addOnline($userId);
+                return true;
+            });
+        }
+
+        return $next($request);
+    }
+}
+```
+
+Такий підхід гарантує, що ваш хеш `online_users` у Redis завжди актуальний, при цьому уникаючи зайвих частих оновлень. Це просте, продуктивне та масштабоване рішення для відстеження активних користувачів у вашому Laravel-застосунку.
+
+## Висновок
+
+Ця реалізація у Laravel використовує Redis hash для відстеження онлайн-користувачів у режимі реального часу. Кожен користувач зберігається як поле з часовим штампом, а `HEXPIRE` забезпечує автоматичне видалення неактивних користувачів. Middleware з дебаунсом оновлює статус користувача при кожному запиті, забезпечуючи швидке, ефективне та масштабоване рішення для моніторингу активних користувачів.

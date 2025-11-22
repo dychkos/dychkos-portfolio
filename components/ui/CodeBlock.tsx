@@ -27,7 +27,7 @@ export default function CodeBlock({
     <pre
       ref={preRef}
       {...props}
-      className='relative my-[12px] px-[15px] py-[25px]'
+      className='relative my-[12px] px-[15px] py-[25px] pt-[42px]'
     >
       <button
         disabled={isCopied}

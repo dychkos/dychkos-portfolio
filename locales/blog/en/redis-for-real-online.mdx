@@ -1,0 +1,150 @@
+---
+title: "Managing Online Users Efficiently Using Redis"
+description: "Learn how to track online users in real time with Redis and Laravel using hashes, TTLs, and middleware for efficient updates."
+date: "2025-11-22"
+tags: ["Redis", "Laravel", "Online Users", "Realtime"]
+readingTime: 3
+author: "Serhii Dychko"
+---
+
+
+## Table of Contents
+
+- [What is redis](#what-is-redis)
+- [Tracking Online Users with Redis Hashes](#tracking-online-users-with-redis-hashes)
+- [Implementing Online User Tracking in Laravel](#implementing-online-user-tracking-in-laravel)
+- [Summary](#summary)
+
+## What is redis
+
+Redis is an in-memory data store that keeps everything in RAM, allowing extremely fast reads and writes. Because it works both as a database and a cache, it’s ideal for high-load scenarios where low latency and quick access to data are essential.
+
+## Tracking Online Users with Redis Hashes
+Today, we’ll explore how Redis can be used to build a fast and fairly accurate mechanism for tracking online users on a website.
+
+For this implementation, we’ll use Redis hashes. A hash in Redis is a data structure that maps fields to values, similar to a dictionary or associative array in other programming languages. It allows efficient storage and retrieval of multiple related values under a single key.
+
+We’ll structure the hash so that each field corresponds to an online user. Whenever a user performs an action, we add or update their field in the hash. For example, our online_users hash might look like: user_1, user_2, etc.
+
+The key point is managing offline users. Redis 7.4 introduced the ability to set an expiration time, or TTL (time-to-live), for individual hash fields. This allows us to automatically remove users who are no longer active.
+
+To add a user to the hash with the current timestamp, we can use:
+
+```
+    HSET online_users <userId> <timestamp>
+```
+
+To set a TTL for a specific field, Redis 7.0+ supports HEXPIRE:
+
+```
+    HEXPIRE online_users 3600 FIELDS 1 123
+```
+Here, 3600 is the TTL in seconds, and FIELDS 1 123 sets the expiration for the field with ID 123. This approach ensures that online_users always reflects the current active users without manual cleanup, making it a simple and efficient way to track online activity.
+
+To check if a user is online, you can use:
+```
+    HEXISTS online_users <userId>
+```
+
+To retrieve all online users:
+```
+    HGETALL online_users
+```
+
+To count the total number of online users:
+```
+    HLEN online_users
+```
+
+This mechanism allows you to efficiently manage online users in real time. The actual implementation can be adjusted depending on the needs of your application.
+
+## Implementing Online User Tracking in Laravel
+
+Here’s an example of how it could be implemented in Laravel. The following wrapper class handles communication with Redis in PHP:
+```php
+class UserOnlineRepository implements UserOnlineRepositoryInterface
+{
+    private const ONLINE_TTL = 300;
+    private const ONLINE_KEY = 'users_online';
+
+    private function getFullKey(): string
+    {
+        $prefix = config('database.redis.options.prefix', '');
+        return $prefix.self::ONLINE_KEY;
+    }
+
+    public function addOnline(int $userId)
+    {
+        $userId = (string) $userId;
+        Redis::command('HSET', [self::ONLINE_KEY, $userId, time()]);
+
+        $client = Redis::connection()->client();
+        $client->rawCommand(
+            'HEXPIRE',
+            $this->getFullKey(),
+            self::ONLINE_TTL,
+            'FIELDS',
+            1,
+            $userId
+        );
+    }
+
+    public function isOnline(int $userId): bool
+    {
+        $userId = (string) $userId;
+        $result = Redis::command('HEXISTS', [self::ONLINE_KEY, $userId]);
+        return (bool) $result;
+    }
+
+    public function getAllOnline(): array
+    {
+        $data = Redis::command('HGETALL', [self::ONLINE_KEY]);
+
+        if (empty($data)) {
+            return [];
+        }
+
+        $users = [];
+        for ($i = 0; $i < count($data); $i += 2) {
+            $users[] = (int) $data[$i];
+        }
+
+        return $users;
+    }
+
+    public function getTotalOnlineCount(): int
+    {
+        return (int) Redis::command('HLEN', [self::ONLINE_KEY]);
+    }
+}
+```
+
+Additionally, we can create a global middleware to update the online status of a user for each request, with a debounce mechanism to avoid excessive Redis writes:
+```php
+class UserOnlineMiddleware
+{
+    private const DEBOUNCE_SECONDS = 120;
+
+    public function handle(Request $request, Closure $next)
+    {
+        $user = $request->user();
+
+        if ($user) {
+            $userId = $user->id;
+
+            Cache::remember("user_online_debounce:{$userId}", self::DEBOUNCE_SECONDS, function () use ($userId) {
+                app(UserOnlineServiceInterface::class)->addOnline($userId);
+                return true;
+            });
+        }
+
+        return $next($request);
+    }
+}
+```
+
+This setup ensures that your online_users hash in Redis is always up-to-date while avoiding unnecessary frequent updates. It’s a simple, performant, and scalable solution to track active users across your Laravel application.
+
+## Summary
+
+This Laravel implementation uses a Redis hash to track online users in real time. Each user is stored as a field with a timestamp, and `HEXPIRE` ensures inactive users are automatically removed. A middleware with debouncing updates the user’s status on each request, providing a fast, efficient, and scalable solution for monitoring active users.
