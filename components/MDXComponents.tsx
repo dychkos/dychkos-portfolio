@@ -1,22 +1,53 @@
 import type { MDXComponents } from 'mdx/types';
 import Image from 'next/image';
 
+import { Hash } from 'lucide-react';
+import React from 'react';
+
+interface HeadingProps {
+  id?: string;
+  children: React.ReactNode;
+}
+
+interface HeadingProps {
+  id?: string;
+  children: React.ReactNode;
+}
+
+interface HeadingProps extends React.HTMLAttributes<HTMLHeadingElement> {
+  id?: string;
+}
+
+const heading = (level: 1 | 2 | 3 | 4 | 5 | 6) => {
+  const classes: Record<number, string> = {
+    1: 'mb-6 text-4xl font-bold leading-tight text-foreground lg:text-5xl',
+    2: 'mb-4 mt-8 text-3xl font-semibold leading-tight text-foreground lg:text-4xl',
+    3: 'mb-3 mt-6 text-2xl font-semibold leading-tight text-foreground lg:text-3xl',
+    4: 'mb-2 mt-4 text-xl font-semibold leading-tight text-foreground',
+    5: 'mb-2 mt-3 text-lg font-semibold',
+    6: 'mb-1 mt-2 text-base font-semibold',
+  };
+
+  const Heading = ({ id, children }: HeadingProps) => {
+    const Tag = `h${level}` as keyof JSX.IntrinsicElements;
+
+    return (
+      <a href={`#${id}`} className='group relative no-underline'>
+        <Hash className='absolute -left-6 hidden h-full p-1 text-cyan-500 group-hover:inline-block' />
+        <Tag id={id} className={classes[level]}>
+          {children}
+        </Tag>
+      </a>
+    );
+  };
+  Heading.displayName = `h${level}`;
+  return Heading;
+};
 export const mdxComponents: MDXComponents = {
-  h1: ({ children }) => (
-    <h1 className='mb-6 text-4xl font-bold leading-tight text-foreground lg:text-5xl'>
-      {children}
-    </h1>
-  ),
-  h2: ({ children }) => (
-    <h2 className='mb-4 mt-8 text-3xl font-semibold leading-tight text-foreground lg:text-4xl'>
-      {children}
-    </h2>
-  ),
-  h3: ({ children }) => (
-    <h3 className='mb-3 mt-6 text-2xl font-semibold leading-tight text-foreground lg:text-3xl'>
-      {children}
-    </h3>
-  ),
+  h1: heading(1),
+  h2: heading(2),
+  h3: heading(3),
+  h4: heading(4),
   p: ({ children }) => (
     <p className='mb-4 text-lg leading-relaxed text-foreground/90'>
       {children}
