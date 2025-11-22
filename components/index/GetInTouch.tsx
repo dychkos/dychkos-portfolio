@@ -29,7 +29,7 @@ export const GetInTouch: React.FC = () => {
   const t = useTranslations('GetInTouch');
 
   const handleCopyEmail = () => {
-    const email = 'dychkosergey@gmail.com';
+    const email = 'dychkos@proton.me';
     navigator.clipboard
       .writeText(email)
       .then(() => {
