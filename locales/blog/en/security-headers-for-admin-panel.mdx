@@ -1,0 +1,131 @@
+---
+title: 'Security Headers for an Admin Panel'
+description: 'Why admin panels need stronger browser-side protections and which HTTP security headers help reduce common web attack risks.'
+date: '2026-09-20'
+tags: ['Security', 'HTTP headers']
+readingTime: 5
+author: 'Serhii Dychko'
+---
+
+An admin panel is one of the most attractive targets in an application. It often provides access to user data, payments, roles, and critical operations, so its compromise has more serious consequences than the takeover of a regular account.
+
+Strong authentication and authorization are not enough: browser interactions must also be protected. The main risks are XSS, clickjacking, CSRF, data exposure through insecure connections or caching, and loading resources from third-party domains. Security headers do not replace core security controls, but they add an important layer of protection against these attacks.
+
+This article covers the most important HTTP headers to configure for an admin panel. The examples use PHP and Laravel, but the principles are framework- and language-independent: headers are part of an HTTP response, so they can be configured in an application, web server, or proxy in any stack.
+
+A ready-to-use middleware example is available in the [security-headers repository](https://github.com/dychkos/security-headers.git).
+
+## Table of Contents
+
+- [Security headers middleware](#security-headers-middleware)
+  - [Content-Security-Policy](#content-security-policy)
+  - [X-Content-Type-Options](#x-content-type-options)
+  - [X-Frame-Options](#x-frame-options)
+  - [Referrer-Policy](#referrer-policy)
+  - [Permissions-Policy](#permissions-policy)
+  - [X-Robots-Tag](#x-robots-tag)
+  - [Cross-Origin-Opener-Policy](#cross-origin-opener-policy)
+  - [Cross-Origin-Resource-Policy](#cross-origin-resource-policy)
+  - [Cache-Control](#cache-control)
+  - [Pragma](#pragma)
+  - [Expires](#expires)
+  - [Strict-Transport-Security](#strict-transport-security)
+
+## Security headers middleware
+
+In Laravel, it is convenient to keep these policies in a dedicated `SecurityHeaders` middleware and apply it to admin routes. Below is a concise breakdown of the middleware's behavior.
+
+### Content-Security-Policy
+
+`Content-Security-Policy` is the central header in this configuration. `default-src 'self'` allows resources only from the current origin by default, while the remaining directives define explicit exceptions:
+
+- `script-src 'self' 'nonce-…' 'strict-dynamic' https:` allows local scripts, scripts with a nonce, and resources loaded by a trusted script.
+- `style-src 'self' 'unsafe-inline'` keeps inline styles compatible with the interface. This is a deliberate trade-off; never add `unsafe-inline` for scripts.
+- `img-src`, `media-src`, `font-src`, and `connect-src` restrict sources for images, media, fonts, and `fetch`/XHR/WebSocket. `data:` and `blob:` are allowed only where needed for local upload previews.
+- `frame-src 'none'` prevents the admin panel from embedding external frames, while `frame-ancestors 'none'` prevents other sites from embedding the admin panel.
+- `object-src 'none'`, `base-uri 'self'`, and `form-action 'self'` disable legacy plugins, prevent a base URL override, and keep forms from submitting to third-party domains.
+- `require-trusted-types-for 'script'` and `trusted-types …` protect DOM insertion points in browsers that support Trusted Types.
+- In production, `upgrade-insecure-requests` converts accidental `http://` resource URLs to HTTPS. It is omitted locally to avoid disrupting development.
+
+The `*_src_extra` configuration values are for explicit integrations such as a CDN or API. Do not add domains “just in case”; every exception expands the attack surface.
+
+Here are two starting points for a CSP header.
+
+**Admin panel without external services:**
+
+```http
+Content-Security-Policy: default-src 'self'; script-src 'self' 'nonce-{nonce}' 'strict-dynamic'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob:; font-src 'self' data:; connect-src 'self'; frame-src 'none'; frame-ancestors 'none'; object-src 'none'; base-uri 'self'; form-action 'self'; require-trusted-types-for 'script'; trusted-types default
+```
+
+**Admin panel with an API and CDN:**
+
+```http
+Content-Security-Policy: default-src 'self'; script-src 'self' 'nonce-{nonce}' 'strict-dynamic'; style-src 'self' 'unsafe-inline' https://cdn.example.com; img-src 'self' data: blob: https://cdn.example.com; connect-src 'self' https://api.example.com; frame-src 'none'; frame-ancestors 'none'; object-src 'none'; base-uri 'self'; form-action 'self'
+```
+
+The server replaces `{nonce}` with a new random value for each response. In the second example, replace `api.example.com` and `cdn.example.com` with the exact domains used by your integrations; avoid broad allowlists such as `https:` unless they are necessary.
+
+#### Script nonce
+
+At the beginning of each request, create a random `$nonce`, store it in the request attributes, and pass it to `Vite::useCspNonce($nonce)`. Laravel adds the nonce to tags generated by Vite. In the CSP, that same value allows the browser to execute only scripts that the server explicitly authorized. This is much safer than allowing all inline scripts.
+
+The `@vite` Blade directive receives the nonce automatically. If a template needs a custom inline script, add the same nonce explicitly:
+
+```blade
+<!doctype html>
+<html lang="en">
+    <head>
+        @vite(['resources/css/app.css', 'resources/js/admin.js'])
+
+        <script nonce="{{ Vite::cspNonce() }}">
+            window.adminLocale = @json(app()->getLocale());
+        </script>
+    </head>
+</html>
+```
+
+Do not generate a nonce in Blade yourself: it must match the value in the CSP header for the current response.
+
+### X-Content-Type-Options
+
+`X-Content-Type-Options: nosniff` prevents the browser from guessing a different MIME type for a response, such as treating a file as a script.
+
+### X-Frame-Options
+
+`X-Frame-Options: DENY` prevents the page from loading in a frame and protects against clickjacking. It overlaps with `frame-ancestors 'none'` in CSP, but remains useful for older clients.
+
+### Referrer-Policy
+
+`Referrer-Policy: strict-origin-when-cross-origin` sends only the origin, not the full admin page URL, to another domain.
+
+### Permissions-Policy
+
+`Permissions-Policy` disables browser capabilities the application does not need: geolocation, camera, microphone, payments, USB, and display capture.
+
+### X-Robots-Tag
+
+`X-Robots-Tag: noindex, nofollow` asks search engines not to index internal pages. It is not an access-control mechanism.
+
+### Cross-Origin-Opener-Policy
+
+`Cross-Origin-Opener-Policy: same-origin` isolates the page's browsing context from other origins.
+
+### Cross-Origin-Resource-Policy
+
+`Cross-Origin-Resource-Policy: same-origin` prevents other origins from loading admin-panel resources. Check integrations that may require cross-origin access before enabling it.
+
+### Cache-Control
+
+`Cache-Control: no-store, no-cache, must-revalidate, private` prevents private responses from being stored and requires cached content to be revalidated. This reduces the risk that a sensitive page reappears through the browser Back button after sign-out.
+
+### Pragma
+
+`Pragma: no-cache` is a legacy compatibility directive for clients that do not honor `Cache-Control`.
+
+### Expires
+
+`Expires: 0` marks the response as already expired. It is an additional compatibility measure for older clients.
+
+### Strict-Transport-Security
+
+When `security.hsts.enabled` is enabled, the middleware adds `Strict-Transport-Security` with the configured `max-age` and `includeSubDomains`. After the first HTTPS response, the browser will access the domain only over HTTPS. Enable HSTS only after HTTPS works reliably on the primary domain and every subdomain, because `includeSubDomains` applies the rule to all of them.

@@ -20,8 +20,11 @@ export function MDXContent({ source }: MDXContentProps) {
               [
                 rehypePrettyCode,
                 {
-                  theme: 'nord',
-                  keepBackground: true,
+                  theme: {
+                    light: 'github-light',
+                    dark: 'github-dark-dimmed',
+                  },
+                  keepBackground: false,
                   defaultLang: 'plaintext',
                 },
               ],

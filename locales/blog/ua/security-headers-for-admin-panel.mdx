@@ -1,0 +1,131 @@
+---
+title: "Security Headers для адмін-панелі"
+description: "Розбираємо, чому адмін-панель потребує посиленого захисту та які HTTP-заголовки допомагають зменшити ризики поширених вебатак."
+date: "2026-09-20"
+tags: ["Безпека", "HTTP-заголовки"]
+readingTime: 5
+author: "Сергій Дичко"
+---
+
+Адмін-панель — одна з найпривабливіших цілей для зловмисника. Вона часто надає доступ до користувацьких даних, платежів, ролей і критичних операцій, тому її компрометація має серйозніші наслідки, ніж злам звичайного облікового запису.
+
+Надійної автентифікації та перевірки прав доступу недостатньо: потрібно захистити і браузерну взаємодію. Основні ризики — XSS, clickjacking, CSRF, витік даних через незахищене з’єднання чи кешування та завантаження ресурсів зі сторонніх доменів. Security headers не замінюють базові механізми безпеки, але додають важливий рівень захисту від цих атак.
+
+Далі розберемо найважливіші HTTP-заголовки, які варто налаштувати для адмін-панелі. Для прикладів використаємо PHP і Laravel, проте самі підходи не прив’язані до конкретної мови чи фреймворку: заголовки формує HTTP-відповідь, тож їх можна налаштувати на рівні застосунку, вебсервера або проксі в будь-якому технологічному стеку.
+
+Готовий приклад middleware доступний у репозиторії: [security-headers](https://github.com/dychkos/security-headers.git).
+
+## Зміст
+
+- [Middleware для security headers](#middleware-для-security-headers)
+  - [Content-Security-Policy](#content-security-policy)
+  - [X-Content-Type-Options](#x-content-type-options)
+  - [X-Frame-Options](#x-frame-options)
+  - [Referrer-Policy](#referrer-policy)
+  - [Permissions-Policy](#permissions-policy)
+  - [X-Robots-Tag](#x-robots-tag)
+  - [Cross-Origin-Opener-Policy](#cross-origin-opener-policy)
+  - [Cross-Origin-Resource-Policy](#cross-origin-resource-policy)
+  - [Cache-Control](#cache-control)
+  - [Pragma](#pragma)
+  - [Expires](#expires)
+  - [Strict-Transport-Security](#strict-transport-security)
+
+## Middleware для security headers
+
+У Laravel зручно винести політики в окремий middleware `SecurityHeaders` і застосувати його до маршрутів адмін-панелі. Нижче — логіка такого middleware, розбита на короткі етапи.
+
+### Content-Security-Policy
+
+`Content-Security-Policy` — головний заголовок у цій конфігурації. `default-src 'self'` за замовчуванням дозволяє ресурси лише з поточного домену, а окремі директиви точково уточнюють винятки:
+
+- `script-src 'self' 'nonce-…' 'strict-dynamic' https:` — дозволяє локальні скрипти, скрипти з nonce та ресурси, які довантажує довірений скрипт.
+- `style-src 'self' 'unsafe-inline'` — залишає inline-стилі сумісними з інтерфейсом. Це свідомий компроміс: для скриптів `unsafe-inline` додавати не можна.
+- `img-src`, `media-src`, `font-src` і `connect-src` обмежують джерела зображень, медіа, шрифтів і `fetch`/XHR/WebSocket. `data:` та `blob:` дозволені тільки там, де вони потрібні для локальних прев’ю завантажених файлів.
+- `frame-src 'none'` забороняє адмінці вбудовувати сторонні фрейми, а `frame-ancestors 'none'` не дозволяє вбудувати саму адмінку на іншому сайті.
+- `object-src 'none'`, `base-uri 'self'` і `form-action 'self'` вимикають застарілі плагіни, підміну базового URL та відправку форм на сторонні домени.
+- `require-trusted-types-for 'script'` і `trusted-types …` додають захист DOM-вставок у браузерах, що підтримують Trusted Types.
+- У production `upgrade-insecure-requests` перетворює випадкові `http://` URL ресурсів на HTTPS. Локальне середовище пропускається, щоб не ламати розробку.
+
+Значення `*_src_extra` з конфігурації потрібні для явних інтеграцій, наприклад CDN або API. Не додавайте домени «про всяк випадок»: кожен виняток розширює поверхню атаки.
+
+Ось два готові варіанти заголовка, від яких можна відштовхнутися.
+
+**Адмінка без зовнішніх сервісів:**
+
+```http
+Content-Security-Policy: default-src 'self'; script-src 'self' 'nonce-{nonce}' 'strict-dynamic'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob:; font-src 'self' data:; connect-src 'self'; frame-src 'none'; frame-ancestors 'none'; object-src 'none'; base-uri 'self'; form-action 'self'; require-trusted-types-for 'script'; trusted-types default
+```
+
+**Адмінка з API та CDN:**
+
+```http
+Content-Security-Policy: default-src 'self'; script-src 'self' 'nonce-{nonce}' 'strict-dynamic'; style-src 'self' 'unsafe-inline' https://cdn.example.com; img-src 'self' data: blob: https://cdn.example.com; connect-src 'self' https://api.example.com; frame-src 'none'; frame-ancestors 'none'; object-src 'none'; base-uri 'self'; form-action 'self'
+```
+
+`{nonce}` сервер замінює на нове випадкове значення для кожної відповіді. У другому прикладі замініть `api.example.com` і `cdn.example.com` на конкретні домени ваших інтеграцій; не використовуйте маски на кшталт `https:` без необхідності.
+
+#### Nonce для скриптів
+
+На початку кожного запиту створюємо випадковий `$nonce`, зберігаємо його в атрибутах запиту та передаємо у `Vite::useCspNonce($nonce)`. Laravel додасть цей nonce до тегів ресурсів, які генерує Vite. У CSP той самий nonce дозволяє браузеру виконати лише скрипти, яким сервер явно його надав. Це значно безпечніше за дозвіл усіх inline-скриптів.
+
+У Blade директива `@vite` отримає nonce автоматично. Якщо в шаблоні потрібен власний inline-скрипт, додайте той самий nonce явно:
+
+```blade
+<!doctype html>
+<html lang="uk">
+    <head>
+        @vite(['resources/css/app.css', 'resources/js/admin.js'])
+
+        <script nonce="{{ Vite::cspNonce() }}">
+            window.adminLocale = @json(app()->getLocale());
+        </script>
+    </head>
+</html>
+```
+
+Не генеруйте nonce у Blade самостійно: він має збігатися зі значенням у CSP заголовку поточної відповіді.
+
+### X-Content-Type-Options
+
+`X-Content-Type-Options: nosniff` не дає браузеру вгадувати інший MIME-тип відповіді — наприклад, трактувати файл як скрипт.
+
+### X-Frame-Options
+
+`X-Frame-Options: DENY` блокує завантаження сторінки у фреймі та захищає від clickjacking. Він дублює `frame-ancestors 'none'` у CSP, але корисний для сумісності зі старішими клієнтами.
+
+### Referrer-Policy
+
+`Referrer-Policy: strict-origin-when-cross-origin` передає на інший домен лише origin, а не повний URL адмін-сторінки.
+
+### Permissions-Policy
+
+`Permissions-Policy` вимикає непотрібні можливості браузера: геолокацію, камеру, мікрофон, оплату, USB і захоплення екрана.
+
+### X-Robots-Tag
+
+`X-Robots-Tag: noindex, nofollow` просить пошукові системи не індексувати внутрішні сторінки. Це не механізм контролю доступу.
+
+### Cross-Origin-Opener-Policy
+
+`Cross-Origin-Opener-Policy: same-origin` ізолює контекст вкладки від інших origin.
+
+### Cross-Origin-Resource-Policy
+
+`Cross-Origin-Resource-Policy: same-origin` не дає іншим origin завантажувати ресурси адмінки. Перед увімкненням перевірте інтеграції, яким потрібен cross-origin доступ.
+
+### Cache-Control
+
+`Cache-Control: no-store, no-cache, must-revalidate, private` забороняє зберігати приватні відповіді та вимагає перевірки кешованого вмісту. Це зменшує ризик, що після виходу з акаунта чутлива сторінка відкриється кнопкою «Назад».
+
+### Pragma
+
+`Pragma: no-cache` — застаріла, але сумісна директива для клієнтів, що не враховують `Cache-Control`.
+
+### Expires
+
+`Expires: 0` позначає відповідь як таку, що вже втратила актуальність. Це додатковий сумісний захист для старих клієнтів.
+
+### Strict-Transport-Security
+
+Якщо `security.hsts.enabled` увімкнено, middleware додає `Strict-Transport-Security` з налаштованим `max-age` і `includeSubDomains`. Після першої HTTPS-відповіді браузер звертатиметься до домену лише через HTTPS. Вмикайте HSTS тільки після того, як HTTPS стабільно працює на основному домені й усіх піддоменах, адже `includeSubDomains` поширює правило на кожен із них.
