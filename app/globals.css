@@ -90,3 +90,17 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer components {
+  [data-rehype-pretty-code-figure] pre [data-line] {
+    @apply px-1;
+  }
+
+  [data-rehype-pretty-code-figure] pre span {
+    color: var(--shiki-light) !important;
+  }
+
+  .dark [data-rehype-pretty-code-figure] pre span {
+    color: var(--shiki-dark) !important;
+  }
+}

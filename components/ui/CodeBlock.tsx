@@ -27,12 +27,12 @@ export default function CodeBlock({
     <pre
       ref={preRef}
       {...props}
-      className='relative my-[12px] px-[15px] py-[25px] pt-[42px]'
+      className='relative my-5 overflow-x-auto rounded-lg border border-slate-200 bg-slate-50 px-4 pb-4 pt-12 text-sm leading-6 text-slate-900 shadow-sm dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100'
     >
       <button
         disabled={isCopied}
         onClick={handleClickCopy}
-        className='absolute right-4 top-4 z-10 size-6'
+        className='absolute right-3 top-3 z-10 inline-flex size-7 items-center justify-center rounded-md text-slate-500 transition-colors hover:bg-slate-200 hover:text-slate-900 disabled:cursor-default dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-100'
       >
         {isCopied ? <Check /> : <Clipboard />}
       </button>
