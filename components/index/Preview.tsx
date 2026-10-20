@@ -1,10 +1,10 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import Image from 'next/image';
 import Reveal from '@/components/site/Reveal';
-import { isWorkingHoursInUkraine } from '@/utils/helper';
+import { getYearsOfExperience, isWorkingHoursInUkraine } from '@/utils/helper';
 
 const linkClass =
   'group border-b border-site-line pb-px transition-colors hover:border-site-ink';
@@ -20,6 +20,8 @@ const EXTERNAL_LINKS = [
 const Preview: React.FC = () => {
   const t = useTranslations('Preview');
   const tHeader = useTranslations('Header');
+  const locale = useLocale();
+  const years = getYearsOfExperience();
   // Computed after mount: the page is statically rendered.
   const [online, setOnline] = useState<boolean | null>(null);
 
@@ -59,8 +61,18 @@ const Preview: React.FC = () => {
       <h1 className='mt-7 text-balance text-[40px] font-semibold leading-[1.05] tracking-[-1.6px] sm:text-[52px]'>
         {t('greeting')}
       </h1>
-      <p className='mt-5 max-w-[600px] text-[18px] text-site-soft'>
-        {t('about')}
+      {/* The year count can change between build time and visit time. */}
+      <p
+        className='mt-5 max-w-[600px] text-[18px] text-site-soft'
+        suppressHydrationWarning
+      >
+        {t('about', {
+          years,
+          // 'ua' is not a valid locale tag, so plural rules come from 'uk'.
+          category: new Intl.PluralRules(
+            locale === 'ua' ? 'uk' : locale
+          ).select(years),
+        })}
       </p>
       <div className='mt-7 flex flex-wrap gap-x-[22px] gap-y-3 text-[15px] font-medium'>
         <a
