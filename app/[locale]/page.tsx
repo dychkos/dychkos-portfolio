@@ -6,6 +6,9 @@ import { getTranslations, unstable_setRequestLocale } from 'next-intl/server';
 import React from 'react';
 import { Metadata } from 'next';
 import PostsPreview from '@/components/index/PostsPreview';
+import GetInTouch from '@/components/index/GetInTouch';
+import ReadingLayout from '@/components/site/ReadingLayout';
+import ContentsNav, { type ContentsItem } from '@/components/site/ContentsNav';
 
 interface IndexProps {
   params: {
@@ -42,15 +45,31 @@ export const metadata: Metadata = {
 export default async function Index({ params: { locale } }: IndexProps) {
   unstable_setRequestLocale(locale);
 
-  const t = await getTranslations('Index');
+  const t = await getTranslations();
+
+  const items: ContentsItem[] = [
+    { id: 'hero', num: '00', label: t('Site.hi') },
+    { id: 'about', num: '01', label: t('About.heading') },
+    { id: 'skills', num: '02', label: t('Skills.heading') },
+    { id: 'experience', num: '03', label: t('Experience.heading') },
+    { id: 'notes', num: '04', label: t('PostsPreview.heading') },
+    { id: 'contact', num: '05', label: t('GetInTouch.heading') },
+  ];
+
   return (
-    <main>
+    <ReadingLayout
+      aside={<ContentsNav title={t('Site.contents')} items={items} />}
+    >
       <Preview />
       <About />
       <Skills />
       <Experience />
-      <PostsPreview />
-      {/*<Work />*/}
-    </main>
+      <div id='notes'>
+        <PostsPreview />
+      </div>
+      <div id='contact'>
+        <GetInTouch />
+      </div>
+    </ReadingLayout>
   );
 }

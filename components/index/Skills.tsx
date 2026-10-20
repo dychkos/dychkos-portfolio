@@ -1,73 +1,65 @@
-import Container from '@/components/Container';
-import Heading from '@/components/partials/Heading';
 import React from 'react';
-import Body2 from '@/components/ui/typography/Body2';
-import Heading3 from '@/components/ui/typography/Heading3';
-import Heading2 from '@/components/ui/typography/Heading2';
 import { useTranslations } from 'next-intl';
+import Reveal from '@/components/site/Reveal';
+import SectionHeading from '@/components/site/SectionHeading';
 
 export const Skills: React.FC = () => {
   const t = useTranslations('Skills');
   return (
-    <Container className='py-16 lg:py-24' id='skills'>
-      <Heading>{t('heading')}</Heading>
-      <Heading2 className='mt-4 text-center'>{t('title')}</Heading2>
-      <div className='mt-12 grid grid-cols-3 justify-center gap-y-12 md:grid-cols-4'>
+    <Reveal id='skills' className='pt-24'>
+      <SectionHeading num='02' title={t('heading')} lead={t('title')} />
+      <div className='mt-7 grid grid-cols-2 border-l border-t border-site-line sm:grid-cols-4'>
         {skillsData.map((skill) => (
           <div
             key={skill.title}
-            className='mx-auto flex flex-col items-center justify-center gap-2'
+            className='group flex flex-col items-center gap-2.5 border-b border-r border-site-line px-2.5 pb-[14px] pt-[18px] transition-colors hover:bg-site-accent-soft'
           >
-            <div className='flex h-16 w-16 items-center justify-center'>
-              <img src={`/images/${skill.image}`} alt={skill.title} />
-            </div>
-
-            <Body2>{skill.title}</Body2>
+            <img
+              src={`/images/${skill.image}`}
+              alt={skill.title}
+              className={`h-[34px] w-[34px] transition-transform group-hover:-translate-y-0.5 ${
+                skill.darkImage ? 'dark:hidden' : ''
+              }`}
+            />
+            {skill.darkImage && (
+              <img
+                src={`/images/${skill.darkImage}`}
+                alt={skill.title}
+                className='hidden h-[34px] w-[34px] transition-transform group-hover:-translate-y-0.5 dark:block'
+              />
+            )}
+            <span className='text-[13px] text-site-soft transition-colors group-hover:text-site-ink'>
+              {skill.title}
+            </span>
           </div>
         ))}
       </div>
-      <Heading3 className='mt-12 text-center'>
-        {t('combo')}&nbsp;
-        <span className='block bg-gradient-to-r from-yellow-700 to-yellow-400 bg-clip-text text-transparent sm:inline'>
-          Laravel + React
-        </span>
-      </Heading3>
-    </Container>
+      <p className='mt-6 text-[17px]'>
+        {t('combo')}{' '}
+        <span className='font-semibold text-site-accent'>Laravel + React</span>
+      </p>
+    </Reveal>
   );
 };
 
-const skillsData = [
+interface SkillItem {
+  title: string;
+  image: string;
+  darkImage?: string;
+}
+
+const skillsData: SkillItem[] = [
+  { title: 'JavaScript', image: 'icon-javscript.svg' },
+  { title: 'Laravel', image: 'icon-laravel.svg' },
+  { title: 'NodeJS', image: 'icon-node-js.svg' },
+  { title: 'React', image: 'icon-react.svg' },
+  { title: 'Vue', image: 'icon-vue.svg' },
+  { title: 'Docker', image: 'icon-docker.svg' },
+  { title: 'MySQL', image: 'icon-mysql.svg' },
   {
-    title: 'JavaScript',
-    image: 'icon-javscript.svg',
-  },
-  {
-    title: 'Laravel',
-    image: 'icon-laravel.svg',
-  },
-  {
-    title: 'NodeJS',
-    image: 'icon-node-js.svg',
-  },
-  {
-    title: 'React',
-    image: 'icon-react.svg',
-  },
-  {
-    title: 'Vue',
-    image: 'icon-vue.svg',
-  },
-  {
-    title: 'Docker',
-    image: 'icon-docker.svg',
-  },
-  {
-    title: 'PostgreSQL',
-    image: 'icon-postgresql.svg',
-  },
-  {
-    title: 'MongoDB',
-    image: 'icon-mongodb.svg',
+    title: 'Elasticsearch',
+    image: 'icon-elasticsearch.svg',
+    darkImage: 'icon-elasticsearch-dark.svg',
   },
 ];
 

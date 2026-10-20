@@ -1,61 +1,68 @@
 import React from 'react';
-import Container from '@/components/Container';
-import Heading from '@/components/partials/Heading';
-import Heading2 from '@/components/ui/typography/Heading2';
 import { useMessages, useTranslations } from 'next-intl';
 import { AbstractIntlMessages } from 'use-intl';
+import Reveal from '@/components/site/Reveal';
+import SectionHeading from '@/components/site/SectionHeading';
+
+const LOGO_PLATES: Record<string, { plate: string; pad: boolean }> = {
+  Appflame: { plate: '#000000', pad: false },
+  NewGen: { plate: '#0f1834', pad: false },
+  FluidWeb: { plate: '#ffffff', pad: true },
+  GrandySoft: { plate: '#18181b', pad: true },
+};
+const FALLBACK_PLATE = { plate: '#ffffff', pad: true };
 
 const Experience: React.FC = () => {
   const t = useTranslations('Experience');
   const messages = useMessages() as AbstractIntlMessages & MessagesType;
+  const companies = messages.Experience.companies;
 
   return (
-    <div className='bg-gray-50 py-16 dark:bg-gray-950 lg:py-24' id='experience'>
-      <Container>
-        <Heading>{t('heading')}</Heading>
-        <Heading2 className='mb-8 mt-4 text-center'>{t('title')}</Heading2>
-        {Array(4)
-          .fill(false)
-          .map((el, index) => {
-            return (
-              <div
-                key={index}
-                className='mx-auto mb-8 flex max-w-4xl flex-col gap-4 rounded-lg bg-white p-6 shadow-md dark:bg-gray-900 lg:flex-row lg:gap-12'
-              >
-                <div className='mb-2 flex items-center'>
-                  <img
-                    src={`/images/${t(`companies.${index}.name`)}.png`}
-                    alt={t(`companies.${index}.name`)}
-                    className='mr-2 max-w-32 rounded-xl bg-gray-50 dark:bg-gray-900'
-                  />
-                </div>
-                <div className='flex-grow'>
-                  <p className='mb-2 text-lg font-semibold text-gray-900 dark:text-gray-50'>
+    <Reveal id='experience' className='pt-24'>
+      <SectionHeading num='03' title={t('heading')} lead={t('title')} />
+      <div className='mt-4'>
+        {Object.keys(companies).map((key) => {
+          const index = Number(key);
+          const name = t(`companies.${index}.name`);
+          const { plate, pad } = LOGO_PLATES[name] ?? FALLBACK_PLATE;
+          return (
+            <div
+              key={index}
+              className='draw-line group relative grid grid-cols-[44px_1fr] gap-4 py-5'
+            >
+              <img
+                src={`/images/${name}.png`}
+                alt={name}
+                style={{ backgroundColor: plate }}
+                className={`h-11 w-11 rounded-[11px] shadow-[inset_0_0_0_1px_var(--site-line),0_0_0_1px_var(--site-line)] ${
+                  pad ? 'object-contain p-[5px]' : 'object-cover'
+                }`}
+              />
+              <div>
+                <div className='flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1'>
+                  <p className='text-[17px] font-medium transition-colors group-hover:text-site-accent'>
                     {t(`companies.${index}.role`)}
                   </p>
-                  <ul className='list-inside list-disc'>
-                    {Object.keys(
-                      messages.Experience.companies[index].responsibilities
-                    ).map((key) => (
-                      <li
-                        key={key}
-                        className='mb-1 text-gray-900 dark:text-gray-50'
-                      >
-                        {t(`companies.${index}.responsibilities.${key}`)}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                <div>
-                  <p className='mb-4 whitespace-nowrap text-gray-500'>
+                  <span className='font-site-mono text-[12px] text-site-soft'>
                     {t(`companies.${index}.period`)}
-                  </p>
+                  </span>
                 </div>
+                <p className='text-[14px] text-site-soft'>{name}</p>
+                <ul className='mt-3 list-inside list-disc space-y-1 text-[15px] text-site-soft'>
+                  {Object.keys(companies[index].responsibilities).map(
+                    (rKey) => (
+                      <li key={rKey}>
+                        {t(`companies.${index}.responsibilities.${rKey}`)}
+                      </li>
+                    )
+                  )}
+                </ul>
               </div>
-            );
-          })}
-      </Container>
-    </div>
+            </div>
+          );
+        })}
+      </div>
+    </Reveal>
   );
 };
 
