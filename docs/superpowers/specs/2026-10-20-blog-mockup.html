@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>dychkos · blog mockup</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root { --bg:#f7f7f8; --surface:#ffffff; --ink:#18181b; --soft:#6a6a73; --line:#18181b14; --grid:#18181b0b; --acc:#3563e9; --acc-soft:#3563e914; --code:#1f1f23; }
+  html.dark { --bg:#18181b; --surface:#1f1f23; --ink:#f1f1f3; --soft:#9b9ba6; --line:#ffffff14; --grid:#ffffff09; --acc:#7b9cff; --acc-soft:#7b9cff1a; --code:#111113; color-scheme:dark; }
+  * { box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { margin:0; background:var(--bg); color:var(--ink); font-family:'Onest',system-ui,sans-serif; font-size:16px; line-height:1.65; -webkit-font-smoothing:antialiased; }
+  a { color:inherit; text-decoration:none; }
+  .mono { font-family:'JetBrains Mono',monospace; }
+
+  .progress { position:fixed; top:0; left:0; height:2px; width:0; background:var(--acc); z-index:20; }
+  header { position:sticky; top:0; z-index:10; background:color-mix(in oklab,var(--bg) 82%,transparent); backdrop-filter:blur(10px); border-bottom:1px solid var(--line); }
+  .bar { max-width:1080px; margin:0 auto; padding:12px 24px; display:flex; align-items:center; gap:24px; font-size:14px; }
+  .bar .brand { font-weight:600; }
+  .bar .chapter { font-size:12px; color:var(--soft); min-width:150px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:260px; }
+  .bar nav { margin-left:auto; display:flex; gap:20px; color:var(--soft); }
+  .bar nav a.on { color:var(--ink); }
+  .bar .cv { color:var(--acc); font-weight:500; }
+  .bar button { background:none; border:1px solid var(--line); color:var(--ink); border-radius:8px; padding:4px 9px; font:inherit; font-size:12px; cursor:pointer; }
+  @media (max-width:760px) { .bar nav, .bar .chapter { display:none; } .bar .right { margin-left:auto; } }
+
+  .layout { max-width:1080px; margin:0 auto; padding:0 24px; display:grid; grid-template-columns:200px minmax(0,640px); gap:64px; }
+  @media (max-width:1000px) { .layout { grid-template-columns:minmax(0,1fr); } .toc { display:none; } }
+  .toc { position:sticky; top:84px; align-self:start; padding-top:72px; font-size:13px; max-height:calc(100vh - 100px); overflow:auto; }
+  .toc .label { color:var(--soft); font-size:12px; margin-bottom:10px; }
+  .toc a { display:block; padding:4px 0; color:var(--soft); transition:color .2s; line-height:1.4; }
+  .toc a.sub { padding-left:12px; font-size:12.5px; }
+  .toc a.on { color:var(--ink); }
+  .toc a.on::before { content:""; display:inline-block; width:5px; height:5px; border-radius:50%; background:var(--acc); margin:0 7px 2px -12px; }
+  .toc a.sub.on::before { margin-left:-12px; }
+  .toc .track { height:1px; background:var(--line); margin:14px 0 0; position:relative; }
+  .toc .track i { position:absolute; left:0; top:0; height:1px; background:var(--acc); width:0; }
+
+  main { padding:72px 0 40px; }
+  h1 { font-size:44px; line-height:1.08; letter-spacing:-1.3px; font-weight:600; margin:0 0 12px; }
+  .lead { color:var(--soft); font-size:18px; margin:0 0 10px; }
+  .count { font-size:12px; color:var(--soft); }
+  .reveal { opacity:0; translate:0 12px; transition:opacity .6s ease, translate .6s ease; }
+  .reveal.shown { opacity:1; translate:0 0; }
+
+  /* list */
+  .year { font-size:12px; color:var(--soft); margin:44px 0 4px; }
+  .post { display:grid; grid-template-columns:1fr auto; gap:4px 20px; padding:20px 0; border-top:1px solid var(--line); }
+  .post .t { font-size:19px; font-weight:500; transition:color .2s; }
+  .post:hover .t { color:var(--acc); }
+  .post .d { font-size:12px; color:var(--soft); padding-top:6px; white-space:nowrap; }
+  .post .desc { grid-column:1/-1; color:var(--soft); font-size:15px; }
+  .post .tags { grid-column:1/-1; display:flex; gap:8px; font-size:12px; margin-top:4px; }
+  .post .tags span { background:var(--acc-soft); color:var(--acc); padding:1px 8px; border-radius:6px; }
+  .pager { display:flex; justify-content:space-between; margin-top:28px; padding-top:18px; border-top:1px solid var(--line); font-size:14px; color:var(--soft); }
+  .pager a { color:var(--ink); font-weight:500; } .pager .off { opacity:.4; }
+
+  /* article */
+  .back { font-size:14px; color:var(--soft); display:inline-block; margin-bottom:26px; }
+  .back span { display:inline-block; transition:translate .25s; } .back:hover span { translate:-3px 0; }
+  .meta { display:flex; flex-wrap:wrap; gap:6px 14px; align-items:center; font-size:12px; color:var(--soft); margin:16px 0 36px; padding-bottom:22px; border-bottom:1px solid var(--line); }
+  .meta .tags { display:flex; gap:8px; } .meta .tags span { background:var(--acc-soft); color:var(--acc); padding:1px 8px; border-radius:6px; font-family:'Onest',sans-serif; }
+  article { font-size:17px; line-height:1.7; }
+  article p { margin:0 0 18px; }
+  article h2 { font-size:26px; letter-spacing:-.5px; font-weight:600; margin:44px 0 12px; line-height:1.2; scroll-margin-top:80px; }
+  article h3 { font-size:20px; font-weight:600; margin:32px 0 10px; scroll-margin-top:80px; }
+  article a { color:var(--acc); text-decoration:underline; text-underline-offset:3px; text-decoration-thickness:1px; }
+  article code { font-family:'JetBrains Mono',monospace; font-size:.84em; background:var(--acc-soft); color:var(--ink); padding:2px 6px; border-radius:5px; }
+  article ul { padding-left:20px; margin:0 0 18px; } article li { margin-bottom:6px; }
+  article ul.toc-in { list-style:none; padding-left:0; } article ul.toc-in ul { list-style:none; padding-left:16px; margin:4px 0 0; }
+  article pre { background:var(--code); color:#e4e4e7; border-radius:12px; padding:16px 18px; overflow-x:auto; font-family:'JetBrains Mono',monospace; font-size:13px; line-height:1.6; margin:0 0 22px; border:1px solid var(--line); }
+  article pre .k { color:#7b9cff } article pre .s { color:#86d39b } article pre .c { color:#7c7c86 }
+  article blockquote { margin:0 0 18px; padding:2px 0 2px 16px; border-left:2px solid var(--acc); color:var(--soft); }
+  .later { margin-top:48px; border:1px dashed var(--line); border-radius:14px; padding:22px; text-align:center; font-size:13px; color:var(--soft); }
+  .nextprev { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:28px; }
+  .nextprev a { border:1px solid var(--line); background:var(--surface); border-radius:12px; padding:14px 16px; transition:border-color .2s; }
+  .nextprev a:hover { border-color:var(--acc); }
+  .nextprev .dir { font-size:12px; color:var(--soft); display:block; }
+  .nextprev .tt { font-weight:500; }
+  .nextprev a:last-child { text-align:right; }
+
+  footer { max-width:1080px; margin:40px auto 0; padding:26px 24px 40px; border-top:1px solid var(--line); display:flex; justify-content:space-between; font-size:13px; color:var(--soft); }
+  .switch { position:fixed; right:14px; bottom:14px; z-index:30; display:flex; gap:6px; background:var(--ink); padding:6px; border-radius:12px; }
+  .switch button { border:0; background:transparent; color:var(--bg); font:inherit; font-size:12px; padding:6px 10px; border-radius:8px; cursor:pointer; opacity:.6; }
+  .switch button.on { background:var(--bg); color:var(--ink); opacity:1; }
+  .view { display:none; } .view.on { display:block; }
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+
+<header>
+  <div class="bar">
+    <a class="brand" href="#">dychkos</a>
+    <span class="chapter mono" id="chapter">Articles</span>
+    <nav><a href="#">About</a><a href="#">Experience</a><a class="on" href="#">Blog</a><a href="#">Contact</a></nav>
+    <span class="right" style="display:flex;gap:10px;align-items:center">
+      <a class="cv" href="#">Download CV ↓</a>
+      <button class="mono">UA</button>
+      <button id="theme" title="Switch theme">☾</button>
+    </span>
+  </div>
+</header>
+
+<!-- BLOG LIST -->
+<div class="view on" id="v-list">
+  <div class="layout">
+    <aside class="toc">
+      <div class="label">Contents</div>
+      <a href="#y2026" class="on">2026</a>
+      <a href="#y2025">2025</a>
+    </aside>
+    <main>
+      <h1 class="reveal">Articles</h1>
+      <p class="lead reveal">Featuring useful insights</p>
+      <div class="count mono reveal">3 Posts</div>
+
+      <div class="reveal">
+        <div class="year mono" id="y2026">2026</div>
+        <a class="post" href="#" data-open>
+          <span class="t">Security Headers for an Admin Panel</span><span class="d mono">Sep 20 · 5 min read</span>
+          <span class="desc">Why admin panels need stronger browser-side protections and which HTTP security headers help reduce common web attack risks.</span>
+          <span class="tags"><span>Security</span><span>HTTP headers</span></span>
+        </a>
+        <div class="year mono" id="y2025">2025</div>
+        <a class="post" href="#">
+          <span class="t">Managing Online Users Efficiently Using Redis</span><span class="d mono">Nov 22 · 4 min read</span>
+          <span class="desc">Learn how to track online users in real time with Redis and Laravel using hashes, TTLs, and middleware for efficient updates.</span>
+          <span class="tags"><span>Redis</span><span>Laravel</span><span>Online Users</span><span>Realtime</span></span>
+        </a>
+        <a class="post" href="#">
+          <span class="t">Handling Kafka Messages in Laravel: A Complete Guide</span><span class="d mono">Oct 19 · 8 min read</span>
+          <span class="desc">Learn how to efficiently produce and consume Kafka messages in Laravel, with step-by-step examples and best practices for building robust message-driven applications.</span>
+          <span class="tags"><span>Apache Kafka</span><span>message broker</span></span>
+        </a>
+        <div class="pager"><span class="off">← Prev</span><span class="mono">1 / 1</span><span class="off">Next →</span></div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- BLOG POST -->
+<div class="view" id="v-post">
+  <div class="layout">
+    <aside class="toc" id="postToc">
+      <div class="label">Contents</div>
+      <a href="#security-headers-middleware" data-h>Security headers middleware</a>
+      <a class="sub" href="#content-security-policy" data-h>Content-Security-Policy</a>
+      <a class="sub" href="#x-content-type-options" data-h>X-Content-Type-Options</a>
+      <a class="sub" href="#x-frame-options" data-h>X-Frame-Options</a>
+      <a class="sub" href="#referrer-policy" data-h>Referrer-Policy</a>
+      <a class="sub" href="#permissions-policy" data-h>Permissions-Policy</a>
+      <a class="sub" href="#x-robots-tag" data-h>X-Robots-Tag</a>
+      <a class="sub" href="#cross-origin-opener-policy" data-h>Cross-Origin-Opener-Policy</a>
+      <a class="sub" href="#cross-origin-resource-policy" data-h>Cross-Origin-Resource-Policy</a>
+      <a class="sub" href="#cache-control" data-h>Cache-Control</a>
+      <a class="sub" href="#pragma" data-h>Pragma</a>
+      <a class="sub" href="#expires" data-h>Expires</a>
+      <a class="sub" href="#strict-transport-security" data-h>Strict-Transport-Security</a>
+      <div class="track"><i id="track"></i></div>
+    </aside>
+    <main>
+      <a class="back" href="#" data-list><span>←</span> Back to Blog</a>
+      <h1>Security Headers for an Admin Panel</h1>
+      <p class="lead">Why admin panels need stronger browser-side protections and which HTTP security headers help reduce common web attack risks.</p>
+      <div class="meta mono"><span>Published Sep 20, 2026</span><span>·</span><span>5 min read</span><span class="tags"><span>Security</span><span>HTTP headers</span></span></div>
+
+      <article id="article">
+        <p>An admin panel is one of the most attractive targets in an application. It often provides access to user data, payments, roles, and critical operations, so its compromise has more serious consequences than the takeover of a regular account.</p>
+        <p>Strong authentication and authorization are not enough: browser interactions must also be protected. The main risks are XSS, clickjacking, CSRF, data exposure through insecure connections or caching, and loading resources from third-party domains.</p>
+        <p>A ready-to-use middleware example is available in the <a href="#">security-headers repository</a>.</p>
+
+        <h2 id="table-of-contents">Table of Contents</h2>
+        <ul class="toc-in"><li><a href="#security-headers-middleware">Security headers middleware</a><ul><li><a href="#content-security-policy">Content-Security-Policy</a></li><li><a href="#x-content-type-options">X-Content-Type-Options</a></li><li><a href="#x-frame-options">X-Frame-Options</a></li><li>…</li></ul></li></ul>
+
+        <h2 id="security-headers-middleware">Security headers middleware</h2>
+        <p>In Laravel, it is convenient to keep these policies in a dedicated <code>SecurityHeaders</code> middleware and apply it to admin routes. Below is a concise breakdown of the middleware's behavior.</p>
+
+        <h3 id="content-security-policy">Content-Security-Policy</h3>
+        <p><code>Content-Security-Policy</code> is the central header in this configuration. <code>default-src 'self'</code> allows resources only from the current origin by default, while the remaining directives define explicit exceptions:</p>
+        <ul>
+          <li><code>frame-src 'none'</code> prevents the admin panel from embedding external frames, while <code>frame-ancestors 'none'</code> prevents other sites from embedding the admin panel.</li>
+          <li><code>object-src 'none'</code>, <code>base-uri 'self'</code>, and <code>form-action 'self'</code> disable legacy plugins, prevent a base URL override, and keep forms from submitting to third-party domains.</li>
+        </ul>
+<pre><span class="k">Content-Security-Policy:</span> default-src <span class="s">'self'</span>; script-src <span class="s">'self'</span> <span class="s">'nonce-{nonce}'</span> <span class="s">'strict-dynamic'</span>; style-src <span class="s">'self'</span> <span class="s">'unsafe-inline'</span>; img-src <span class="s">'self'</span> data: blob:; frame-ancestors <span class="s">'none'</span></pre>
+
+        <h3 id="x-content-type-options">X-Content-Type-Options</h3>
+        <p><code>X-Content-Type-Options: nosniff</code> prevents the browser from guessing a different MIME type for a response, such as treating a file as a script.</p>
+        <h3 id="x-frame-options">X-Frame-Options</h3>
+        <p><code>X-Frame-Options: DENY</code> prevents the page from loading in a frame and protects against clickjacking. It overlaps with <code>frame-ancestors 'none'</code> in CSP, but remains useful for older clients.</p>
+        <h3 id="referrer-policy">Referrer-Policy</h3>
+        <p><code>Referrer-Policy: strict-origin-when-cross-origin</code> sends only the origin, not the full admin page URL, to another domain.</p>
+        <h3 id="permissions-policy">Permissions-Policy</h3>
+        <p><code>Permissions-Policy</code> disables browser capabilities the application does not need: geolocation, camera, microphone, payments, USB, and display capture.</p>
+        <h3 id="x-robots-tag">X-Robots-Tag</h3>
+        <p><code>X-Robots-Tag: noindex, nofollow</code> asks search engines not to index internal pages. It is not an access-control mechanism.</p>
+        <h3 id="cross-origin-opener-policy">Cross-Origin-Opener-Policy</h3>
+        <p><code>Cross-Origin-Opener-Policy: same-origin</code> isolates the page's browsing context from other origins.</p>
+        <h3 id="cross-origin-resource-policy">Cross-Origin-Resource-Policy</h3>
+        <p><code>Cross-Origin-Resource-Policy: same-origin</code> prevents other origins from loading admin-panel resources. Check integrations that may require cross-origin access before enabling it.</p>
+        <h3 id="cache-control">Cache-Control</h3>
+        <p><code>Cache-Control: no-store, no-cache, must-revalidate, private</code> prevents private responses from being stored and requires cached content to be revalidated. This reduces the risk that a sensitive page reappears through the browser Back button after sign-out.</p>
+        <h3 id="pragma">Pragma</h3>
+        <p><code>Pragma: no-cache</code> is a legacy compatibility directive for clients that do not honor <code>Cache-Control</code>.</p>
+        <h3 id="expires">Expires</h3>
+        <p><code>Expires: 0</code> marks the response as already expired. It is an additional compatibility measure for older clients.</p>
+        <h3 id="strict-transport-security">Strict-Transport-Security</h3>
+        <p>When <code>security.hsts.enabled</code> is enabled, the middleware adds <code>Strict-Transport-Security</code> with the configured <code>max-age</code> and <code>includeSubDomains</code>. After the first HTTPS response, the browser will access the domain only over HTTPS. Enable HSTS only after HTTPS works reliably on the primary domain and every subdomain, because <code>includeSubDomains</code> applies the rule to all of them.</p>
+      </article>
+
+      <div class="later mono">reserved for comments and views (later)</div>
+
+      <div class="nextprev">
+        <a href="#"><span class="dir">←</span><span class="tt">Managing Online Users Efficiently Using Redis</span></a>
+        <a href="#" style="visibility:hidden"></a>
+      </div>
+    </main>
+  </div>
+</div>
+
+<footer><span>Made with ❤ by Serhii Dychko</span><span class="mono">2026</span></footer>
+
+<div class="switch"><button class="on" data-v="list">Blog list</button><button data-v="post">Post</button></div>
+
+<script>
+  const root = document.documentElement;
+  document.getElementById('theme').onclick = () => root.classList.toggle('dark');
+
+  const chapter = document.getElementById('chapter');
+  const views = { list: document.getElementById('v-list'), post: document.getElementById('v-post') };
+  function show(v) {
+    Object.entries(views).forEach(([k, el]) => el.classList.toggle('on', k === v));
+    document.querySelectorAll('.switch button').forEach(b => b.classList.toggle('on', b.dataset.v === v));
+    chapter.textContent = v === 'list' ? 'Articles' : 'Security Headers for an Admin Panel';
+    scrollTo(0, 0); reveal();
+  }
+  document.querySelectorAll('.switch button').forEach(b => b.onclick = () => show(b.dataset.v));
+  document.querySelector('[data-open]').onclick = e => { e.preventDefault(); show('post'); };
+  document.querySelector('[data-list]').onclick = e => { e.preventDefault(); show('list'); };
+
+  const progress = document.getElementById('progress'), track = document.getElementById('track');
+  addEventListener('scroll', () => {
+    const p = Math.max(0, scrollY / (document.body.scrollHeight - innerHeight));
+    progress.style.width = track.style.width = (p * 100) + '%';
+  }, { passive:true });
+
+  const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) e.target.classList.add('shown'); }), { threshold:.1 });
+  function reveal() { document.querySelectorAll('.view.on .reveal').forEach(el => io.observe(el)); }
+  reveal();
+
+  // post: highlight current heading in contents and show it in the header
+  const tocLinks = document.querySelectorAll('#postToc a[data-h]');
+  const spy = new IntersectionObserver(es => es.forEach(e => {
+    if (!e.isIntersecting || !views.post.classList.contains('on')) return;
+    const id = e.target.id;
+    if (id === 'table-of-contents') return;
+    tocLinks.forEach(a => a.classList.toggle('on', a.getAttribute('href') === '#' + id));
+    chapter.textContent = e.target.textContent;
+  }), { rootMargin:'-20% 0px -70% 0px' });
+  document.querySelectorAll('#article h2, #article h3').forEach(h => spy.observe(h));
+</script>
+</body>
+</html>

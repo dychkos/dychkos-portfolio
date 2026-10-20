@@ -1,0 +1,328 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>dychkos · full page mockup</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root { --bg:#f7f7f8; --surface:#ffffff; --ink:#18181b; --soft:#6a6a73; --line:#18181b14; --grid:#18181b0b; --acc:#3563e9; --acc-soft:#3563e914; }
+  html.dark { --bg:#18181b; --surface:#1f1f23; --ink:#f1f1f3; --soft:#9b9ba6; --line:#ffffff14; --grid:#ffffff09; --acc:#7b9cff; --acc-soft:#7b9cff1a; color-scheme:dark; }
+  * { box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { margin:0; background:var(--bg); color:var(--ink); font-family:'Onest',system-ui,sans-serif; font-size:16px; line-height:1.65; -webkit-font-smoothing:antialiased; transition:background .3s,color .3s; }
+  a { color:inherit; text-decoration:none; }
+  .mono { font-family:'JetBrains Mono',monospace; }
+
+  /* reading progress + top bar */
+  .progress { position:fixed; top:0; left:0; height:2px; width:0; background:var(--acc); z-index:20; }
+  header { position:sticky; top:0; z-index:10; background:color-mix(in oklab,var(--bg) 82%,transparent); backdrop-filter:blur(10px); border-bottom:1px solid var(--line); }
+  .bar { max-width:1080px; margin:0 auto; padding:12px 24px; display:flex; align-items:center; gap:24px; font-size:14px; }
+  .bar .brand { font-weight:600; }
+  .bar .chapter { font-size:12px; color:var(--soft); min-width:150px; transition:opacity .25s; }
+  .bar nav { margin-left:auto; display:flex; gap:20px; color:var(--soft); }
+  .bar nav a:hover { color:var(--ink); }
+  .bar .cv { color:var(--acc); font-weight:500; }
+  .bar button { background:none; border:1px solid var(--line); color:var(--ink); border-radius:8px; padding:4px 9px; font:inherit; font-size:12px; cursor:pointer; }
+  @media (max-width:760px) { .bar nav, .bar .chapter { display:none; } .bar .right { margin-left:auto; } }
+
+  /* layout: sticky contents on the left, reading column */
+  .layout { max-width:1080px; margin:0 auto; padding:0 24px; display:grid; grid-template-columns:200px minmax(0,640px); gap:64px; }
+  @media (max-width:1000px) { .layout { grid-template-columns:minmax(0,1fr); } .toc { display:none; } }
+  .toc { position:sticky; top:84px; align-self:start; padding-top:72px; font-size:13px; }
+  .toc .label { color:var(--soft); font-size:12px; margin-bottom:10px; }
+  .toc a { display:flex; gap:10px; padding:5px 0; color:var(--soft); transition:color .2s; }
+  .toc a .n { font-size:11px; padding-top:2px; }
+  .toc a.on { color:var(--ink); }
+  .toc a.on .n { color:var(--acc); }
+  .toc .track { height:1px; background:var(--line); margin:14px 0 0; position:relative; }
+  .toc .track i { position:absolute; left:0; top:0; height:1px; background:var(--acc); width:0; }
+
+  main { padding-bottom:40px; }
+  section { padding:72px 0 8px; }
+  .reveal { opacity:0; translate:0 14px; transition:opacity .7s ease, translate .7s ease; }
+  .reveal.shown { opacity:1; translate:0 0; }
+  @media (prefers-reduced-motion:reduce) { .reveal { opacity:1; translate:none; transition:none; } }
+
+  .num { font-size:12px; color:var(--acc); }
+  h2 { font-size:30px; line-height:1.15; letter-spacing:-.6px; font-weight:600; margin:6px 0 6px; }
+  .lead { color:var(--soft); margin:0 0 28px; font-size:17px; }
+  p { margin:0 0 14px; }
+  .muted { color:var(--soft); }
+
+  /* hero */
+  .hero { position:relative; padding-top:72px; }
+  .hero::before { content:""; position:absolute; inset:0 -60px -40px; z-index:-1;
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px); background-size:28px 28px;
+    mask-image:radial-gradient(70% 70% at 30% 30%,#000 30%,transparent 80%); -webkit-mask-image:radial-gradient(70% 70% at 30% 30%,#000 30%,transparent 80%); }
+  .hero .top { display:flex; align-items:center; gap:16px; margin-bottom:26px; }
+  .hero img { width:76px; height:76px; border-radius:18px; object-fit:cover; }
+  .hero .meta { font-size:12.5px; color:var(--soft); line-height:1.8; }
+  .dot { display:inline-block; width:7px; height:7px; border-radius:50%; background:#22a55a; margin-right:6px; vertical-align:1px; }
+  .hero h1 { font-size:52px; line-height:1.05; letter-spacing:-1.6px; font-weight:600; margin:0 0 18px; }
+  .hero p { font-size:18px; color:var(--soft); max-width:600px; }
+  .links { display:flex; flex-wrap:wrap; gap:10px 22px; margin-top:26px; font-size:15px; font-weight:500; }
+  .links a { border-bottom:1px solid var(--line); padding-bottom:2px; transition:border-color .2s,color .2s; }
+  .links a:hover { border-color:var(--ink); }
+  .links a.pri { color:var(--acc); border-color:var(--acc); }
+  .links a span, .more span { display:inline-block; transition:translate .25s; }
+  .links a:hover span, .more:hover span { translate:3px 0; }
+
+  /* about */
+  figure { margin:0 0 26px; }
+  /* zoomed past full width so the subject can be centered horizontally */
+  .banner { aspect-ratio:3/2; border-radius:14px; background:url(/images/me-vertical.jpg) 68% 52% / 120% auto no-repeat; }
+
+  /* phone easter egg: digit groups get small notes on hover */
+  /* phone easter egg: 404, 25, 36 scramble into "not found", 5², 6² on hover */
+  .phone { display:inline-flex; gap:.32em; }
+  .phone .g { transition:color .2s; }
+  .copy:hover .phone .g[data-b], .copy.peek .phone .g[data-b] { color:var(--acc); }
+  figcaption { font-size:12px; color:var(--soft); margin-top:8px; }
+  .chips { display:flex; gap:10px; margin:4px 0 22px; }
+  .chip { display:flex; align-items:center; gap:8px; border:1px solid var(--line); background:var(--surface); border-radius:10px; padding:7px 12px 7px 8px; font-size:14px; transition:border-color .2s; }
+  .chip:hover { border-color:var(--acc); }
+  /* outline logos drawn as masks so they take the text color in both themes */
+  .chip .ico { width:22px; height:22px; background:currentColor; -webkit-mask:var(--src) center/contain no-repeat; mask:var(--src) center/contain no-repeat; transition:background-color .2s; }
+  .chip:hover { color:var(--acc); }
+  .facts { list-style:none; padding:0; margin:0 0 18px; display:grid; grid-template-columns:1fr 1fr; gap:2px 24px; }
+  .facts li::before { content:"—"; color:var(--soft); margin-right:8px; }
+  @media (max-width:560px) { .facts { grid-template-columns:1fr; } }
+
+  /* skills */
+  .skills { display:grid; grid-template-columns:repeat(4,1fr); border-top:1px solid var(--line); border-left:1px solid var(--line); }
+  .skill { border-right:1px solid var(--line); border-bottom:1px solid var(--line); padding:18px 10px 14px; display:flex; flex-direction:column; align-items:center; gap:10px; font-size:13px; color:var(--soft); transition:background .2s,color .2s; }
+  .skill:hover { background:var(--acc-soft); color:var(--ink); }
+  .skill img { width:34px; height:34px; transition:translate .25s; }
+  .skill:hover img { translate:0 -2px; }
+  .combo { margin-top:18px; font-size:17px; }
+  .combo b { color:var(--acc); font-weight:600; }
+  @media (max-width:560px) { .skills { grid-template-columns:repeat(2,1fr); } }
+
+  /* experience */
+  .job { display:grid; grid-template-columns:44px 1fr; gap:16px; padding:20px 0; position:relative; }
+  .job::before { content:""; position:absolute; left:0; right:0; top:0; height:1px; background:var(--line); transform-origin:left; scale:0 1; transition:scale .9s cubic-bezier(.2,.7,.2,1); }
+  .shown .job::before { scale:1 1; }
+  /* each logo sits on its own plate: own-background logos fill it, transparent ones get a contrasting plate */
+  .job img { width:44px; height:44px; border-radius:11px; object-fit:cover; background:var(--plate,#fff); box-shadow:inset 0 0 0 1px var(--line), 0 0 0 1px var(--line); }
+  .job img.pad { object-fit:contain; padding:5px; }
+  .job .head { display:flex; justify-content:space-between; gap:12px; align-items:baseline; flex-wrap:wrap; }
+  .job b { font-weight:500; font-size:17px; transition:color .2s; }
+  .job:hover b { color:var(--acc); }
+  .job .when { font-size:12px; color:var(--soft); white-space:nowrap; }
+  .job .co { font-size:14px; color:var(--soft); }
+  .job ul { margin:8px 0 0; padding-left:18px; color:var(--soft); font-size:15px; }
+  .job li { margin-bottom:3px; }
+
+  /* posts */
+  .post { display:grid; grid-template-columns:1fr auto; gap:6px 20px; padding:18px 0; border-top:1px solid var(--line); }
+  .post .t { font-size:18px; font-weight:500; transition:color .2s; }
+  .post:hover .t { color:var(--acc); }
+  .post .d { font-size:12px; color:var(--soft); padding-top:5px; }
+  .post .tags { grid-column:1/-1; display:flex; gap:8px; font-size:12px; color:var(--soft); }
+  .post .tags span { background:var(--acc-soft); color:var(--acc); padding:1px 8px; border-radius:6px; }
+  .more { display:inline-block; margin-top:18px; color:var(--acc); font-weight:500; }
+
+  /* contact */
+  .contact { border:1px solid var(--line); background:var(--surface); border-radius:16px; padding:26px; }
+  .copy { display:flex; flex-wrap:wrap; gap:4px 16px; justify-content:space-between; align-items:center; padding:14px 0; border-top:1px solid var(--line); cursor:pointer; }
+  .copy:first-of-type { border-top:none; }
+  .copy .v { font-size:17px; font-weight:500; }
+  .copy .h { font-size:12px; color:var(--soft); transition:color .2s; }
+  .copy:hover .h { color:var(--acc); }
+
+  footer { max-width:1080px; margin:56px auto 0; padding:26px 24px 40px; border-top:1px solid var(--line); display:flex; justify-content:space-between; font-size:13px; color:var(--soft); }
+  .note { position:fixed; right:14px; bottom:14px; background:var(--ink); color:var(--bg); font-size:12px; padding:8px 12px; border-radius:10px; max-width:280px; z-index:30; }
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+
+<header>
+  <div class="bar">
+    <a class="brand" href="#top">dychkos</a>
+    <span class="chapter mono" id="chapter">00 · Hi</span>
+    <nav><a href="#about">About</a><a href="#experience">Experience</a><a href="#notes">Blog</a><a href="#contact">Contact</a></nav>
+    <span class="right" style="display:flex;gap:10px;align-items:center">
+      <a class="cv" href="#">Download CV ↓</a>
+      <button class="mono">UA</button>
+      <button id="theme" title="Switch theme">☾</button>
+    </span>
+  </div>
+</header>
+
+<div class="layout" id="top">
+  <aside class="toc">
+    <div class="label">Contents</div>
+    <a href="#top" data-s="hero"><span class="n mono">00</span>Hi</a>
+    <a href="#about" data-s="about"><span class="n mono">01</span>About me</a>
+    <a href="#skills" data-s="skills"><span class="n mono">02</span>Skills</a>
+    <a href="#experience" data-s="experience"><span class="n mono">03</span>My Experience</a>
+    <a href="#notes" data-s="notes"><span class="n mono">04</span>Latest in my tech notes</a>
+    <a href="#contact" data-s="contact"><span class="n mono">05</span>Get In Touch</a>
+    <div class="track"><i id="track"></i></div>
+  </aside>
+
+  <main>
+    <section class="hero reveal" id="hero" data-title="00 · Hi">
+      <div class="top">
+        <img src="/images/me.jpg" alt="Me">
+        <div class="meta mono">Kyiv, Ukraine<br><span class="dot"></span>Online</div>
+      </div>
+      <h1>Hi, I’m Serhii 👋</h1>
+      <p>As a Full Stack Web Developer 🇺🇦 with over 4 years of industry experience, I am dedicated to creating high-quality products, constantly advancing my skills, and enjoying the simple pleasures of everyday life.</p>
+      <div class="links">
+        <a class="pri" href="#">Download CV <span>↓</span></a>
+        <a href="#">GitHub <span>↗</span></a>
+        <a href="#">LinkedIn <span>↗</span></a>
+        <a href="#">Instagram <span>↗</span></a>
+      </div>
+    </section>
+
+    <section class="reveal" id="about" data-title="01 · About me">
+      <div class="num mono">01</div>
+      <h2>About me</h2>
+      <p class="lead">Curious about me? Here you have it:</p>
+      <p>My main focus is my love for creation. I always strive for quality work, and I apply this principle to all of my projects.</p>
+      <p>While working on projects, I always keep an eye on trends and the latest technologies. This helps me stay up-to-date with the latest developments in web development.</p>
+      <p>In addition to programming, I love reading, running, GYM training, and overall strive to lead an active and conscious lifestyle. Here is my progress in this regard:</p>
+      <div class="chips">
+        <a class="chip" href="#"><span class="ico" style="--src:url(/images/adidas-logo.svg)" aria-hidden="true"></span>Running</a>
+        <a class="chip" href="#"><span class="ico" style="--src:url(/images/hevy-logo.svg)" aria-hidden="true"></span>Sport</a>
+      </div>
+      <p>Finally, some quick bits about me.</p>
+      <ul class="facts">
+        <li>Bachelor in Computer Science</li><li>Enjoying science fiction</li>
+        <li>Fan of an active lifestyle</li><li>I love craft beer</li>
+      </ul>
+      <p>And finally: I respond very quickly, so don't hesitate to reach out and say hello! I promise I don't bite 😉</p>
+    </section>
+
+    <section class="reveal" id="skills" data-title="02 · Skills">
+      <div class="num mono">02</div>
+      <h2>Skills</h2>
+      <p class="lead">The skills, tools and technologies I am really good at:</p>
+      <div class="skills">
+        <div class="skill"><img src="/images/icon-javscript.svg" alt="">JavaScript</div>
+        <div class="skill"><img src="/images/icon-laravel.svg" alt="">Laravel</div>
+        <div class="skill"><img src="/images/icon-node-js.svg" alt="">NodeJS</div>
+        <div class="skill"><img src="/images/icon-react.svg" alt="">React</div>
+        <div class="skill"><img src="/images/icon-vue.svg" alt="">Vue</div>
+        <div class="skill"><img src="/images/icon-docker.svg" alt="">Docker</div>
+        <div class="skill"><img src="/images/icon-mysql.svg" alt="">MySQL</div>
+        <div class="skill"><img src="/images/icon-elasticsearch.svg" alt="">Elasticsearch</div>
+      </div>
+      <p class="combo">My favourite combo <b>Laravel + React</b></p>
+    </section>
+
+    <section class="reveal" id="experience" data-title="03 · My Experience">
+      <div class="num mono">03</div>
+      <h2>My Experience</h2>
+      <p class="lead">Here's a brief summary of my recent experience:</p>
+      <div class="job"><img src="/images/Appflame.png" alt="Appflame" style="--plate:#000"><div>
+        <div class="head"><b>Middle PHP Software Engineer</b><span class="when mono">Jun 2025 – Present</span></div>
+        <div class="co">Appflame</div>
+        <ul><li>Working with payments in the Monetization team</li></ul></div></div>
+      <div class="job"><img src="/images/NewGen.png" alt="NewGen" style="--plate:#0f1834"><div>
+        <div class="head"><b>Middle Full Stack Developer</b><span class="when mono">Apr. 2024 - Jun. 2025</span></div>
+        <div class="co">NewGen</div>
+        <ul><li>Optimization and caching when working with BigData databases.</li><li>Refactoring static UI components to dynamic using Livewire.</li><li>Configured a web application deployment from scratch in a Laravel Forge and Digital Ocean environment.</li><li>Set up CI/CD for a microservices architecture using Jenkins.</li></ul></div></div>
+      <div class="job"><img src="/images/FluidWeb.png" alt="FluidWeb" class="pad" style="--plate:#ffffff"><div>
+        <div class="head"><b>Junior-Middle Full Stack Developer</b><span class="when mono">Nov. 2021 - Apr. 2024</span></div>
+        <div class="co">FluidWeb</div>
+        <ul><li>Participated in the development of an online insurance product in the USA with over 400k+ users.</li><li>Integrated tools for data collection such as SalesForce, Mixpanel, Intercom.</li><li>Built APIs for communication with American insurance companies.</li><li>Implemented cronjobs, queue mechanisms, and caching on the backend.</li><li>Participated in setting up the AWS environment for project deployment (EC2, CodeCommit, IAM, CloudWatch, S3).</li></ul></div></div>
+      <div class="job"><img src="/images/GrandySoft.png" alt="GrandySoft" class="pad" style="--plate:#18181b"><div>
+        <div class="head"><b>Junior React Front End Developer</b><span class="when mono">Jun. 2021 - Sep. 2021</span></div>
+        <div class="co">GrandySoft</div>
+        <ul><li>Implemented JWT authorization in React.</li><li>Developed a custom UI kit for the project.</li><li>Extended existing functionality for the WEB CAD system.</li></ul></div></div>
+    </section>
+
+    <section class="reveal" id="notes" data-title="04 · Latest in my tech notes">
+      <div class="num mono">04</div>
+      <h2>Latest in my tech notes</h2>
+      <p class="lead">Recent topics I’ve been exploring:</p>
+      <a class="post" href="#"><span class="t">Security Headers for an Admin Panel</span><span class="d mono">Sep 20, 2026 · 5 min read</span><span class="tags"><span>Security</span><span>HTTP headers</span></span></a>
+      <a class="post" href="#"><span class="t">Managing Online Users Efficiently Using Redis</span><span class="d mono">Nov 22, 2025 · 4 min read</span><span class="tags"><span>Redis</span><span>Laravel</span><span>Realtime</span></span></a>
+      <a class="post" href="#"><span class="t">Handling Kafka Messages in Laravel: A Complete Guide</span><span class="d mono">Oct 19, 2025 · 8 min read</span><span class="tags"><span>Apache Kafka</span><span>message broker</span></span></a>
+      <a class="more" href="#">View more <span>→</span></a>
+    </section>
+
+    <section class="reveal" id="contact" data-title="05 · Get In Touch">
+      <div class="num mono">05</div>
+      <h2>Get In Touch</h2>
+      <p class="lead">What’s next? Feel free to reach out to me if you`re looking for a good developer, have a query, or simply want to connect.</p>
+      <div class="contact">
+        <div class="copy" data-v="dychkos@proton.me"><span class="v">dychkos@proton.me</span><span class="h mono">Click to copy email</span></div>
+        <div class="copy" data-v="+380734042536"><span class="v phone"><span class="g">+380</span><span class="g">73</span><span class="g" data-a="404" data-b="not found">404</span><span class="g" data-a="25" data-b="5²">25</span><span class="g" data-a="36" data-b="6²">36</span></span><span class="h mono">Click to copy phone</span></div>
+      </div>
+      <p class="muted" style="margin-top:22px">You may also find me on these platforms!</p>
+      <div class="links" style="margin-top:6px"><a href="https://www.threads.net/@dychkos">Threads <span>↗</span></a><a href="https://x.com/SerhiiDychko">X <span>↗</span></a><a href="https://t.me/dychkos/">Telegram <span>↗</span></a></div>
+    </section>
+  </main>
+</div>
+
+<footer><span>Made with ❤ by Serhii Dychko</span><span class="mono">2026</span></footer>
+<div class="note">Макет. Скроль, перемикай тему ☾, наводь на рядки. Контакти копіюються по кліку.</div>
+
+<script>
+  const root = document.documentElement;
+  document.getElementById('theme').onclick = () => root.classList.toggle('dark');
+
+  const progress = document.getElementById('progress'), track = document.getElementById('track');
+  addEventListener('scroll', () => {
+    const p = scrollY / (document.body.scrollHeight - innerHeight);
+    progress.style.width = track.style.width = (p * 100) + '%';
+  }, { passive:true });
+
+  const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) e.target.classList.add('shown'); }), { threshold:.12 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  const chapter = document.getElementById('chapter');
+  const links = document.querySelectorAll('.toc a');
+  const spy = new IntersectionObserver(es => es.forEach(e => {
+    if (!e.isIntersecting) return;
+    chapter.textContent = e.target.dataset.title;
+    links.forEach(a => a.classList.toggle('on', a.dataset.s === e.target.id));
+  }), { rootMargin:'-40% 0px -55% 0px' });
+  document.querySelectorAll('section').forEach(s => spy.observe(s));
+
+  document.querySelectorAll('.copy').forEach(c => c.onclick = () => {
+    navigator.clipboard?.writeText(c.dataset.v);
+    const h = c.querySelector('.h'), old = h.textContent; h.textContent = 'Copied'; setTimeout(() => h.textContent = old, 1400);
+  });
+
+  // phone easter egg
+  (() => {
+    const row = document.querySelector('.copy:has(.phone)');
+    const groups = row.querySelectorAll('.g[data-b]');
+    const chars = '0123456789#%&*';
+    const timers = new Map();
+    let gen = 0;
+    function morph(el, to, delay, my) {
+      setTimeout(() => {
+        if (my !== gen) return; // a newer hover state won
+        clearInterval(timers.get(el));
+        let step = 0;
+        const len = Math.max(el.textContent.length, to.length), steps = 10;
+        const t = setInterval(() => {
+          step++;
+          const done = Math.floor(len * step / steps);
+          let out = '';
+          for (let i = 0; i < len; i++) out += i < done ? (to[i] || '') : (to[i] === ' ' ? ' ' : chars[Math.floor(Math.random() * chars.length)]);
+          el.textContent = step >= steps ? to : out;
+          if (step >= steps) clearInterval(t);
+        }, 28);
+        timers.set(el, t);
+      }, delay);
+    }
+    const show = () => { const my = ++gen; row.classList.add('peek'); groups.forEach((g, i) => morph(g, g.dataset.b, i * 90, my)); };
+    const hide = () => { const my = ++gen; row.classList.remove('peek'); groups.forEach((g, i) => morph(g, g.dataset.a, i * 60, my)); };
+    row.addEventListener('mouseenter', show);
+    row.addEventListener('mouseleave', hide);
+    // touch screens have no hover, so a tap plays it for a moment
+    row.addEventListener('touchstart', () => { show(); setTimeout(hide, 2200); }, { passive:true });
+  })();
+</script>
+</body>
+</html>
