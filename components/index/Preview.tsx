@@ -65,6 +65,8 @@ const Preview: React.FC = () => {
       <div className='mt-7 flex flex-wrap gap-x-[22px] gap-y-3 text-[15px] font-medium'>
         <a
           href='/CV.pdf'
+          target='_blank'
+          rel='noopener'
           className='group border-b border-site-accent pb-px text-site-accent'
         >
           {tHeader('get-cv')} <span className={arrowClass}>↓</span>
