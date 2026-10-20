@@ -25,7 +25,7 @@ export function MDXContent({ source }: MDXContentProps) {
                     dark: 'github-dark-dimmed',
                   },
                   keepBackground: false,
-                  defaultLang: 'plaintext',
+                  defaultLang: { block: 'plaintext' },
                 },
               ],
             ],
