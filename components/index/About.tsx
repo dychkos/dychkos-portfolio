@@ -13,7 +13,12 @@ const CHIPS = [
     logo: '/images/adidas-logo.svg',
   },
   {
-    key: 'sport',
+    key: 'strava',
+    href: 'https://strava.app.link/p2lhbInfo7b',
+    logo: '/images/strava-logo.svg',
+  },
+  {
+    key: 'gym',
     href: 'https://hevy.com/user/dychkos',
     logo: '/images/hevy-logo.svg',
   },
