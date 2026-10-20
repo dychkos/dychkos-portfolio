@@ -14,7 +14,7 @@ const ReadingLayout: React.FC<ReadingLayoutProps> = ({ aside, children }) => {
             {aside}
           </div>
         </aside>
-        <div className='min-w-0'>{children}</div>
+        <main className='min-w-0'>{children}</main>
       </div>
     </div>
   );

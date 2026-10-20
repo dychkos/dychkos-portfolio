@@ -79,13 +79,13 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         />
       }
     >
-      <main className='pb-10 pt-[72px]'>
+      <div className='pb-10 pt-[72px]'>
         <header className='mb-9 border-b border-site-line pb-[22px]'>
           <Link
             href={`/${locale}/blog`}
             className='group mb-6 inline-flex items-center gap-1.5 text-[14px] text-site-soft transition-colors hover:text-site-ink'
           >
-            <span className='transition-transform group-hover:-translate-x-0.5 motion-reduce:transition-none motion-reduce:transform-none'>
+            <span className='transition-transform group-hover:-translate-x-0.5 motion-reduce:transform-none motion-reduce:transition-none'>
               ←
             </span>
             {t('blogPage.backToBlog')}
@@ -132,7 +132,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           {card(older, '←', 'left')}
           {card(newer, '→', 'right')}
         </nav>
-      </main>
+      </div>
     </ReadingLayout>
   );
 }

@@ -58,15 +58,15 @@ export default async function BlogPage({
   const years = groupPostsByYear(posts);
 
   return (
-    <main className='pb-10 pt-[72px]'>
-      <ReadingLayout
-        aside={
-          <ContentsNav
-            title={t('Site.contents')}
-            items={years.map((y) => ({ id: `y-${y.year}`, label: y.year }))}
-          />
-        }
-      >
+    <ReadingLayout
+      aside={
+        <ContentsNav
+          title={t('Site.contents')}
+          items={years.map((y) => ({ id: `y-${y.year}`, label: y.year }))}
+        />
+      }
+    >
+      <div className='pb-10 pt-[72px]'>
         <h1 className='text-[44px] font-semibold leading-[1.1] tracking-[-1.3px]'>
           {t('Blog.index.title')}
         </h1>
@@ -117,7 +117,7 @@ export default async function BlogPage({
             <p>{t('Blog.noPostsFound')}</p>
           </div>
         )}
-      </ReadingLayout>
-    </main>
+      </div>
+    </ReadingLayout>
   );
 }
