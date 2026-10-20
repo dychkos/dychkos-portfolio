@@ -67,8 +67,12 @@ export const GetInTouch: React.FC = () => {
         <div
           className={rowClass}
           onClick={() => copy('phone', PHONE_RAW)}
-          onMouseEnter={() => setHovered(true)}
-          onMouseLeave={() => setHovered(false)}
+          onPointerEnter={(e) => {
+            if (e.pointerType === 'mouse') setHovered(true);
+          }}
+          onPointerLeave={(e) => {
+            if (e.pointerType === 'mouse') setHovered(false);
+          }}
           onTouchStart={onTouchStart}
         >
           <span className='text-[17px] font-medium'>
