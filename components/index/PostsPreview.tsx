@@ -34,7 +34,7 @@ const PostsPreview: React.FC = async () => {
             className='group mt-6 inline-block text-[15px] text-site-accent'
           >
             {t('more')}{' '}
-            <span className='inline-block transition-transform group-hover:translate-x-[3px] motion-reduce:transition-none motion-reduce:transform-none'>
+            <span className='inline-block transition-transform group-hover:translate-x-[3px] motion-reduce:transform-none motion-reduce:transition-none'>
               →
             </span>
           </Link>
