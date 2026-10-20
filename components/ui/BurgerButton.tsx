@@ -12,7 +12,10 @@ const BurgerButton: React.FC<BurgerButtonProps> = ({
   className,
 }) => {
   return (
-    <div
+    <button
+      type='button'
+      aria-expanded={isOpened}
+      aria-label='Menu'
       onClick={onClick}
       className={cn(
         `tham tham-e-squeeze tham-w-7`,
@@ -23,9 +26,9 @@ const BurgerButton: React.FC<BurgerButtonProps> = ({
       )}
     >
       <div className='tham-box'>
-        <div className='tham-inner bg-gray-600 dark:bg-gray-50' />
+        <div className='tham-inner bg-site-ink' />
       </div>
-    </div>
+    </button>
   );
 };
 

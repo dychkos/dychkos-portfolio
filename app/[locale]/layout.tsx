@@ -3,10 +3,11 @@ import { JetBrains_Mono, Onest } from 'next/font/google';
 import { unstable_setRequestLocale } from 'next-intl/server';
 import React, { ReactNode } from 'react';
 import { locales } from '@/config';
-import Header from '@/components/Header';
 import Providers from '@/app/Providers';
-import Footer from '@/components/Footer';
-import GetInTouch from '@/components/index/GetInTouch';
+import { ChapterProvider } from '@/components/site/ChapterProvider';
+import ReadingProgress from '@/components/site/ReadingProgress';
+import SiteHeader from '@/components/site/SiteHeader';
+import SiteFooter from '@/components/site/SiteFooter';
 
 const onest = Onest({
   subsets: ['latin', 'cyrillic'],
@@ -50,11 +51,12 @@ export default async function LocaleLayout({
         )}
       >
         <Providers>
-          <Header />
-          {children}
-          <GetInTouch />
-
-          <Footer />
+          <ChapterProvider>
+            <ReadingProgress />
+            <SiteHeader />
+            {children}
+            <SiteFooter />
+          </ChapterProvider>
         </Providers>
       </body>
     </html>
