@@ -1,12 +1,20 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft, Calendar, Clock } from 'lucide-react';
-import { getPostBySlug, getAllBlogSlugs } from '@/lib/blog';
+import {
+  getPostBySlug,
+  getAllBlogSlugs,
+  getBlogPostsByLocale,
+} from '@/lib/blog';
 import { isValidLocale } from '@/lib/i18n';
 import { getTranslations } from 'next-intl/server';
 import { Locale } from '@/lib/i18n';
-import Container from '@/components/Container';
 import { MDXContent } from '@/components/MDXContent';
+import ReadingLayout from '@/components/site/ReadingLayout';
+import ContentsNav from '@/components/site/ContentsNav';
+import PostExtras from '@/components/blog/PostExtras';
+import { extractHeadings } from '@/lib/site/toc';
+import { formatPostDate, getAdjacentPosts } from '@/lib/site/posts';
+import { cn } from '@/utils/helper';
 
 interface BlogPostPageProps {
   params: Promise<{
@@ -29,94 +37,103 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   }
 
   const t = await getTranslations('Blog');
+  const tSite = await getTranslations('Site');
 
-  const formattedDate = new Date(post.date).toLocaleDateString(
-    locale === 'ua' ? 'uk-UA' : 'en-US',
-    {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    }
-  );
+  const all = getBlogPostsByLocale(locale as Locale);
+  const { newer, older } = getAdjacentPosts(all, slug);
+  const headings = extractHeadings(post.content);
+
+  const card = (
+    target: typeof newer,
+    arrow: string,
+    align: 'left' | 'right'
+  ) =>
+    target ? (
+      <Link
+        href={`/${locale}/blog/${target.slug}`}
+        className={cn(
+          'block rounded-xl border border-site-line bg-site-surface px-4 py-3.5 transition-colors hover:border-site-accent',
+          align === 'right' && 'text-right'
+        )}
+      >
+        <div className='text-site-soft'>{arrow}</div>
+        <div className='mt-1 text-[15px] font-medium text-site-ink'>
+          {target.title}
+        </div>
+      </Link>
+    ) : (
+      <div />
+    );
 
   return (
-    <Container className='mt-12'>
-      <article className='space-y-20'>
-        {/* Back to blog */}
-        <Link
-          href={`/${locale}/blog`}
-          className='inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground'
-        >
-          <ArrowLeft className='h-4 w-4' />
-          {t('blogPage.backToBlog')}
-        </Link>
+    <ReadingLayout
+      aside={
+        <ContentsNav
+          title={tSite('contents')}
+          items={headings.map((h) => ({
+            id: h.id,
+            label: h.text,
+            level: h.level,
+          }))}
+          rootMargin='-20% 0px -70% 0px'
+        />
+      }
+    >
+      <main className='pb-10 pt-[72px]'>
+        <header className='mb-9 border-b border-site-line pb-[22px]'>
+          <Link
+            href={`/${locale}/blog`}
+            className='group mb-6 inline-flex items-center gap-1.5 text-[14px] text-site-soft transition-colors hover:text-site-ink'
+          >
+            <span className='transition-transform group-hover:-translate-x-0.5'>
+              ←
+            </span>
+            {t('blogPage.backToBlog')}
+          </Link>
 
-        <header className='mb-12'>
-          <div className='mx-auto max-w-4xl text-center'>
-            <h1 className='mb-6 text-4xl font-bold leading-tight text-foreground lg:text-5xl'>
-              {post.title}
-            </h1>
+          <h1 className='text-[44px] font-semibold leading-[1.1] tracking-[-1.3px] text-site-ink'>
+            {post.title}
+          </h1>
 
-            {/* Article Meta */}
-            <div className='mb-6 flex flex-wrap items-center justify-center gap-6 text-muted-foreground'>
-              <div className='flex items-center space-x-2'>
-                <Calendar className='h-4 w-4' />
-                <span>
-                  {t('blogPage.publishedOn')} {formattedDate}
-                </span>
-              </div>
-              <div className='flex items-center space-x-2'>
-                <Clock className='h-4 w-4' />
-                <span>
-                  {post.readingTime} {t('readingTime')}
-                </span>
-              </div>
-            </div>
+          {post.description && (
+            <p className='mt-4 text-[18px] leading-relaxed text-site-soft'>
+              {post.description}
+            </p>
+          )}
 
-            {/* Author */}
-            {post.author && (
-              <div className='mb-6 text-muted-foreground'>
-                <span>
-                  {t('blogPage.author')} {post.author}
-                </span>
-              </div>
+          <div className='mt-4 flex flex-wrap items-center gap-x-3 gap-y-2 font-site-mono text-[12px] text-site-soft'>
+            <span>
+              {t('blogPage.publishedOn')}{' '}
+              {formatPostDate(post.date, locale as 'en' | 'ua', true)} ·{' '}
+              {post.readingTime} {t('readingTime')}
+            </span>
+            {post.tags && post.tags.length > 0 && (
+              <span className='flex flex-wrap gap-2'>
+                {post.tags.map((tag) => (
+                  <span
+                    key={tag}
+                    className='rounded-md bg-site-accent-soft px-2 text-site-accent'
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </span>
             )}
-
-            {/* Tags */}
-            <div className='mb-8 flex flex-wrap justify-center gap-2'>
-              {post.tags && post.tags.length > 0 && (
-                <div className='flex flex-wrap gap-2'>
-                  {post.tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className='rounded-full bg-muted px-3 py-1 text-sm text-muted-foreground'
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              )}
-            </div>
           </div>
         </header>
 
-        {/* Article content */}
-        <div className='prose prose-lg dark:prose-invert max-w-none'>
+        <article>
           <MDXContent source={post.content} />
-        </div>
+        </article>
 
-        {/* Back to blog footer */}
-        <footer>
-          <Link
-            href={`/${locale}/blog`}
-            className='inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground'
-          >
-            <ArrowLeft className='h-4 w-4' />
-            {t('blogPage.backToBlog')}
-          </Link>
-        </footer>
-      </article>
-    </Container>
+        <PostExtras slug={slug} locale={locale} />
+
+        <nav className='mt-7 grid grid-cols-2 gap-4'>
+          {card(older, '←', 'left')}
+          {card(newer, '→', 'right')}
+        </nav>
+      </main>
+    </ReadingLayout>
   );
 }
 

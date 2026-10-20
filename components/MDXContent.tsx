@@ -9,7 +9,7 @@ interface MDXContentProps {
 
 export function MDXContent({ source }: MDXContentProps) {
   return (
-    <div className='prose prose-lg max-w-none'>
+    <div>
       <MDXRemote
         source={source}
         components={mdxComponents}
