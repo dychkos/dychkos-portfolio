@@ -24,28 +24,37 @@ const Reveal: React.FC<RevealProps> = ({
     const el = ref.current;
     if (!el) return;
 
-    const rect = el.getBoundingClientRect();
-    if (rect.top < window.innerHeight && rect.bottom > 0) {
-      el.classList.add('is-shown');
-    }
-    document.documentElement.classList.add('reveal-ready');
+    let observer: IntersectionObserver | undefined;
 
-    if (typeof IntersectionObserver === 'undefined') {
-      el.classList.add('is-shown');
-      return;
-    }
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries.some((entry) => entry.isIntersecting)) {
-          el.classList.add('is-shown');
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.12 }
-    );
-    observer.observe(el);
+    // Wait one frame so Next has already scrolled to a hash target.
+    const frame = requestAnimationFrame(() => {
+      const rect = el.getBoundingClientRect();
+      if (rect.top < window.innerHeight && rect.bottom > 0) {
+        el.classList.add('is-shown');
+      }
+      document.documentElement.classList.add('reveal-ready');
 
-    return () => observer.disconnect();
+      if (typeof IntersectionObserver === 'undefined') {
+        el.classList.add('is-shown');
+        return;
+      }
+      const io = new IntersectionObserver(
+        (entries) => {
+          if (entries.some((entry) => entry.isIntersecting)) {
+            el.classList.add('is-shown');
+            io.disconnect();
+          }
+        },
+        { threshold: 0.12 }
+      );
+      io.observe(el);
+      observer = io;
+    });
+
+    return () => {
+      cancelAnimationFrame(frame);
+      observer?.disconnect();
+    };
   }, []);
 
   return (
