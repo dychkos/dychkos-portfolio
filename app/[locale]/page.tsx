@@ -64,9 +64,7 @@ export default async function Index({ params: { locale } }: IndexProps) {
       <About />
       <Skills />
       <Experience />
-      <div id='notes'>
-        <PostsPreview />
-      </div>
+      <PostsPreview />
       <GetInTouch />
     </ReadingLayout>
   );

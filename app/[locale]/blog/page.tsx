@@ -2,8 +2,10 @@ import { isValidLocale, Locale } from '@/lib/i18n';
 import { generateBlogListMetadata } from '@/lib/metadata';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
-import { BlogPostCard } from '@/components/blog/BlogPostCard';
-import Container from '@/components/Container';
+import ReadingLayout from '@/components/site/ReadingLayout';
+import ContentsNav from '@/components/site/ContentsNav';
+import PostRow from '@/components/site/PostRow';
+import { groupPostsByYear } from '@/lib/site/posts';
 import { getBlogPostsByLocale } from '@/lib/blog';
 import { SimplePaginationControls } from '@/components/blog/SimplePaginationControl';
 import { getTranslations } from 'next-intl/server';
@@ -39,7 +41,7 @@ export default async function BlogPage({
   }
 
   const currentPage = Math.max(1, parseInt(page || '1', 10));
-  const t = await getTranslations('Blog');
+  const t = await getTranslations();
 
   const allPosts = getBlogPostsByLocale(locale as Locale);
 
@@ -53,36 +55,51 @@ export default async function BlogPage({
     notFound();
   }
 
+  const years = groupPostsByYear(posts);
+
   return (
-    <Container className='mt-12'>
-      <div className='space-y-12'>
-        {/* Header */}
-        <div className='mx-auto mb-12 max-w-2xl text-center'>
-          <h1 className='mt-6 text-3xl font-bold text-gray-900 dark:text-gray-50 sm:text-4xl'>
-            {t('index.title')}
-          </h1>
-          <p className='mx-auto mt-4 max-w-xl text-center text-lg text-gray-600 dark:text-gray-300'>
-            {t('index.text')}
-          </p>
+    <main className='pb-10 pt-[72px]'>
+      <ReadingLayout
+        aside={
+          <ContentsNav
+            title={t('Site.contents')}
+            items={years.map((y) => ({ id: `y-${y.year}`, label: y.year }))}
+          />
+        }
+      >
+        <h1 className='text-[44px] font-semibold leading-[1.1] tracking-[-1.3px]'>
+          {t('Blog.index.title')}
+        </h1>
+        <p className='mt-4 text-[18px] text-site-soft'>
+          {t('Blog.index.text')}
+        </p>
+        {totalPosts > 0 && (
+          <div className='mt-4 font-site-mono text-[12px] text-site-soft'>
+            {totalPosts} {t('Blog.index.postCount')}
+          </div>
+        )}
 
-          {/* Posts count */}
-          {totalPosts > 0 && (
-            <div className='mt-4 text-sm text-muted-foreground'>
-              {totalPosts} {t('index.postCount')}
-            </div>
-          )}
-        </div>
-
-        {/* Blog Posts Grid */}
         {posts.length > 0 ? (
-          <>
-            <div className='grid gap-8 md:grid-cols-2 lg:grid-cols-3'>
-              {posts.map((post) => (
-                <BlogPostCard key={`${post.locale}-${post.slug}`} post={post} />
-              ))}
-            </div>
-
-            {/* Pagination */}
+          <div className='mt-10'>
+            {years.map((group) => (
+              <div key={group.year} className='mb-8'>
+                <div
+                  id={`y-${group.year}`}
+                  className='mb-2 scroll-mt-[96px] font-site-mono text-[12px] text-site-soft'
+                >
+                  {group.year}
+                </div>
+                {group.posts.map((post) => (
+                  <PostRow
+                    key={`${post.locale}-${post.slug}`}
+                    post={post}
+                    withYear={false}
+                    showDescription
+                    readingLabel={t('Blog.readingTime')}
+                  />
+                ))}
+              </div>
+            ))}
             {totalPages > 1 && (
               <SimplePaginationControls
                 currentPage={currentPage}
@@ -90,19 +107,17 @@ export default async function BlogPage({
                 locale={locale as Locale}
               />
             )}
-          </>
+          </div>
         ) : (
-          <div className='py-12 text-center'>
-            <div className='mx-auto max-w-md'>
-              <div className='mb-4 text-4xl'>📝</div>
-              <h3 className='mb-2 text-xl font-semibold text-foreground'>
-                {t('noPostsTitle')}
-              </h3>
-              <p className='text-muted-foreground'>{t('noPostsFound')}</p>
-            </div>
+          <div className='py-12 text-site-soft'>
+            <div className='mb-4 text-4xl'>📝</div>
+            <h3 className='mb-2 text-xl font-semibold text-site-ink'>
+              {t('Blog.noPostsTitle')}
+            </h3>
+            <p>{t('Blog.noPostsFound')}</p>
           </div>
         )}
-      </div>
-    </Container>
+      </ReadingLayout>
+    </main>
   );
 }
