@@ -83,12 +83,12 @@ export default async function BlogPage({
           <div className='mt-10'>
             {years.map((group) => (
               <div key={group.year} className='mb-8'>
-                <div
+                <h2
                   id={`y-${group.year}`}
                   className='mb-2 scroll-mt-[96px] font-site-mono text-[12px] text-site-soft'
                 >
                   {group.year}
-                </div>
+                </h2>
                 {group.posts.map((post) => (
                   <PostRow
                     key={`${post.locale}-${post.slug}`}
