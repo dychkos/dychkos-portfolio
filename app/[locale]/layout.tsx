@@ -39,7 +39,7 @@ export default async function LocaleLayout({
 
   return (
     <html
-      className='h-full scroll-smooth'
+      className='h-full scroll-smooth motion-reduce:scroll-auto'
       lang={locale}
       suppressHydrationWarning
     >

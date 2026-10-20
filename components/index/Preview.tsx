@@ -9,7 +9,7 @@ import { isWorkingHoursInUkraine } from '@/utils/helper';
 const linkClass =
   'group border-b border-site-line pb-px transition-colors hover:border-site-ink';
 const arrowClass =
-  'inline-block transition-transform group-hover:translate-x-[3px]';
+  'inline-block transition-transform group-hover:translate-x-[3px] motion-reduce:transition-none motion-reduce:transform-none';
 
 const EXTERNAL_LINKS = [
   { label: 'GitHub', href: 'https://github.com/dychkos' },

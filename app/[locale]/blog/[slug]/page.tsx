@@ -85,7 +85,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             href={`/${locale}/blog`}
             className='group mb-6 inline-flex items-center gap-1.5 text-[14px] text-site-soft transition-colors hover:text-site-ink'
           >
-            <span className='transition-transform group-hover:-translate-x-0.5'>
+            <span className='transition-transform group-hover:-translate-x-0.5 motion-reduce:transition-none motion-reduce:transform-none'>
               ←
             </span>
             {t('blogPage.backToBlog')}

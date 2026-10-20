@@ -79,7 +79,12 @@ const ContentsNav: React.FC<ContentsNavProps> = ({
                   if (!target) return;
                   event.preventDefault();
                   setPinnedId(item.id);
-                  target.scrollIntoView({ behavior: 'smooth' });
+                  const reduce = window.matchMedia(
+                    '(prefers-reduced-motion: reduce)'
+                  ).matches;
+                  target.scrollIntoView({
+                    behavior: reduce ? 'auto' : 'smooth',
+                  });
                   history.replaceState(null, '', `#${item.id}`);
                   if (!target.hasAttribute('tabindex'))
                     target.setAttribute('tabindex', '-1');

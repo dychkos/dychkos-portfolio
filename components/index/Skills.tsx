@@ -17,7 +17,7 @@ export const Skills: React.FC = () => {
             <img
               src={`/images/${skill.image}`}
               alt={skill.title}
-              className={`h-[34px] w-[34px] transition-transform group-hover:-translate-y-0.5 ${
+              className={`h-[34px] w-[34px] transition-transform group-hover:-translate-y-0.5 motion-reduce:transition-none motion-reduce:transform-none ${
                 skill.darkImage ? 'dark:hidden' : ''
               }`}
             />
@@ -25,7 +25,7 @@ export const Skills: React.FC = () => {
               <img
                 src={`/images/${skill.darkImage}`}
                 alt={skill.title}
-                className='hidden h-[34px] w-[34px] transition-transform group-hover:-translate-y-0.5 dark:block'
+                className='hidden h-[34px] w-[34px] transition-transform group-hover:-translate-y-0.5 motion-reduce:transition-none motion-reduce:transform-none dark:block'
               />
             )}
             <span className='text-[13px] text-site-soft transition-colors group-hover:text-site-ink'>
