@@ -138,5 +138,9 @@
       "author": "Written by",
       "publishedOn": "Published"
     }
+  },
+  "Site": {
+    "contents": "Contents",
+    "hi": "Hi"
   }
 }

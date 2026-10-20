@@ -22,7 +22,26 @@ const config: Config = {
         md: 'calc(var(--radius) - 2px)',
         sm: 'calc(var(--radius) - 4px)',
       },
+      fontFamily: {
+        site: ['var(--font-onest)', 'system-ui', 'sans-serif'],
+        'site-mono': [
+          'var(--font-jetbrains-mono)',
+          'ui-monospace',
+          'monospace',
+        ],
+      },
       colors: {
+        site: {
+          bg: 'var(--site-bg)',
+          surface: 'var(--site-surface)',
+          ink: 'var(--site-ink)',
+          soft: 'var(--site-soft)',
+          line: 'var(--site-line)',
+          grid: 'var(--site-grid)',
+          accent: 'var(--site-accent)',
+          'accent-soft': 'var(--site-accent-soft)',
+          online: 'var(--site-online)',
+        },
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
         card: {

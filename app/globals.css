@@ -26,6 +26,16 @@
 
 @layer base {
   :root {
+    --site-bg: #f7f7f8;
+    --site-surface: #ffffff;
+    --site-ink: #18181b;
+    --site-soft: #6a6a73;
+    --site-line: #18181b14;
+    --site-grid: #18181b0b;
+    --site-accent: #3563e9;
+    --site-accent-soft: #3563e914;
+    --site-online: #22a55a;
+
     --background: 0 0% 100%;
     --foreground: 20 14.3% 4.1%;
     --card: 0 0% 100%;
@@ -53,6 +63,15 @@
     --radius: 0.5rem;
   }
   .dark {
+    --site-bg: #18181b;
+    --site-surface: #1f1f23;
+    --site-ink: #f1f1f3;
+    --site-soft: #9b9ba6;
+    --site-line: #ffffff14;
+    --site-grid: #ffffff09;
+    --site-accent: #7b9cff;
+    --site-accent-soft: #7b9cff1a;
+    --site-online: #22a55a;
     --background: 20 14.3% 4.1%;
     --foreground: 60 9.1% 97.8%;
     --card: 20 14.3% 4.1%;
@@ -102,5 +121,60 @@
 
   .dark [data-rehype-pretty-code-figure] pre span {
     color: var(--shiki-dark) !important;
+  }
+
+  .site-grid-bg {
+    background-image:
+      linear-gradient(to right, var(--site-grid) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--site-grid) 1px, transparent 1px);
+    background-size: 28px 28px;
+    -webkit-mask-image: radial-gradient(
+      70% 70% at 30% 30%,
+      #000 30%,
+      transparent 80%
+    );
+    mask-image: radial-gradient(70% 70% at 30% 30%, #000 30%, transparent 80%);
+  }
+
+  .reveal {
+    transition:
+      opacity 0.7s ease,
+      translate 0.7s ease;
+  }
+
+  .draw-line {
+    position: relative;
+  }
+
+  .draw-line::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: var(--site-line);
+    transform-origin: left;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    html.reveal-ready .reveal:not(.is-shown) {
+      opacity: 0;
+      translate: 0 14px;
+    }
+
+    html.reveal-ready .reveal:not(.is-shown) .draw-line::before {
+      scale: 0 1;
+    }
+
+    .draw-line::before {
+      transition: scale 0.9s cubic-bezier(0.2, 0.7, 0.2, 1);
+    }
+  }
+
+  .logo-mask {
+    background: currentColor;
+    -webkit-mask: var(--src) center / contain no-repeat;
+    mask: var(--src) center / contain no-repeat;
   }
 }
