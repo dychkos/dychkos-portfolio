@@ -91,7 +91,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             {t('blogPage.backToBlog')}
           </Link>
 
-          <h1 className='text-[44px] font-semibold leading-[1.1] tracking-[-1.3px] text-site-ink'>
+          <h1 className='break-words text-[34px] font-semibold leading-[1.1] tracking-[-1.3px] text-site-ink sm:text-[44px]'>
             {post.title}
           </h1>
 

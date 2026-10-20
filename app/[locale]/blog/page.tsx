@@ -67,7 +67,7 @@ export default async function BlogPage({
       }
     >
       <div className='pb-10 pt-[72px]'>
-        <h1 className='text-[44px] font-semibold leading-[1.1] tracking-[-1.3px]'>
+        <h1 className='break-words text-[34px] font-semibold leading-[1.1] tracking-[-1.3px] sm:text-[44px]'>
           {t('Blog.index.title')}
         </h1>
         <p className='mt-4 text-[18px] text-site-soft'>

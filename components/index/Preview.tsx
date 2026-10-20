@@ -56,7 +56,7 @@ const Preview: React.FC = () => {
           )}
         </div>
       </div>
-      <h1 className='mt-7 text-[40px] font-semibold leading-[1.05] tracking-[-1.6px] sm:text-[52px]'>
+      <h1 className='mt-7 text-balance text-[40px] font-semibold leading-[1.05] tracking-[-1.6px] sm:text-[52px]'>
         {t('greeting')}
       </h1>
       <p className='mt-5 max-w-[600px] text-[18px] text-site-soft'>
