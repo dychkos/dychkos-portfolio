@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useScrollSpy } from '@/hooks/useScrollSpy';
 import { useScrollProgress } from '@/hooks/useScrollProgress';
 import { useChapter } from '@/components/site/ChapterProvider';
@@ -23,10 +23,13 @@ const ContentsNav: React.FC<ContentsNavProps> = ({
   items,
   rootMargin,
 }) => {
-  const activeId = useScrollSpy(
+  const spyId = useScrollSpy(
     items.map((item) => item.id),
     rootMargin
   );
+  // The entry the reader clicked stays active until they scroll by themselves.
+  const [pinnedId, setPinnedId] = useState<string | null>(null);
+  const activeId = pinnedId ?? spyId;
   const progress = useScrollProgress();
   const { setLabel } = useChapter();
 
@@ -42,6 +45,17 @@ const ContentsNav: React.FC<ContentsNavProps> = ({
   }, [chapterLabel, setLabel]);
 
   useEffect(() => () => setLabel(''), [setLabel]);
+
+  useEffect(() => {
+    if (!pinnedId) return;
+    const release = () => setPinnedId(null);
+    const events = ['wheel', 'touchstart', 'keydown', 'pointerdown'] as const;
+    events.forEach((name) =>
+      window.addEventListener(name, release, { passive: true })
+    );
+    return () =>
+      events.forEach((name) => window.removeEventListener(name, release));
+  }, [pinnedId]);
 
   return (
     <nav aria-label={title}>
@@ -64,8 +78,12 @@ const ContentsNav: React.FC<ContentsNavProps> = ({
                   const target = document.getElementById(item.id);
                   if (!target) return;
                   event.preventDefault();
+                  setPinnedId(item.id);
                   target.scrollIntoView({ behavior: 'smooth' });
                   history.replaceState(null, '', `#${item.id}`);
+                  if (!target.hasAttribute('tabindex'))
+                    target.setAttribute('tabindex', '-1');
+                  target.focus({ preventScroll: true });
                 }}
               >
                 {item.num ? (
