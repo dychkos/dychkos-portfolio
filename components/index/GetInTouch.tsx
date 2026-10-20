@@ -10,7 +10,7 @@ const COPIED_MS = 1400;
 const TAP_MS = 2200;
 
 const rowClass =
-  'flex cursor-pointer flex-wrap justify-between gap-x-4 gap-y-1 py-3.5';
+  'flex w-full cursor-pointer flex-wrap justify-between gap-x-4 gap-y-1 py-3.5 text-left';
 const linkClass =
   'underline decoration-site-line underline-offset-4 transition-colors hover:text-site-accent hover:decoration-site-accent';
 
@@ -57,14 +57,22 @@ export const GetInTouch: React.FC = () => {
     <Reveal as='section' id='contact' className='pb-24 pt-24'>
       <SectionHeading num='05' title={t('heading')} lead={t('title')} />
       <div className='mt-6 rounded-2xl border border-site-line bg-site-surface px-[26px] py-1.5'>
-        <div className={rowClass} onClick={() => copy('email', EMAIL)}>
+        <button
+          type='button'
+          className={rowClass}
+          onClick={() => copy('email', EMAIL)}
+        >
           <span className='text-[17px] font-medium'>{EMAIL}</span>
-          <span className='font-site-mono text-[12px] text-site-soft'>
+          <span
+            aria-live='polite'
+            className='font-site-mono text-[12px] text-site-soft'
+          >
             {copied === 'email' ? t('copied') : t('email')}
           </span>
-        </div>
+        </button>
         <div className='border-t border-site-line' />
-        <div
+        <button
+          type='button'
           className={rowClass}
           onClick={() => copy('phone', PHONE_RAW)}
           onPointerEnter={(e) => {
@@ -78,10 +86,13 @@ export const GetInTouch: React.FC = () => {
           <span className='text-[17px] font-medium'>
             <PhoneEgg active={hovered || tapped} />
           </span>
-          <span className='font-site-mono text-[12px] text-site-soft'>
+          <span
+            aria-live='polite'
+            className='font-site-mono text-[12px] text-site-soft'
+          >
             {copied === 'phone' ? t('copied') : t('phone')}
           </span>
-        </div>
+        </button>
       </div>
       <p className='mt-8 text-[15px] text-site-soft'>{t('other')}</p>
       <div className='mt-3 flex flex-wrap gap-x-6 gap-y-2 text-[16px]'>
