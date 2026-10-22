@@ -88,19 +88,32 @@ const PostExtrasContent: React.FC<PostExtrasProps> = ({ slug, locale }) => {
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setSubmitting(true);
-    setError(null);
+    const text = body.trim();
+    const pending: Comment = {
+      id: -Date.now(),
+      body: text,
+      createdAt: new Date(),
+      isOwn: false,
+      author: { name: session?.user?.name ?? null },
+    };
 
-    const result = await addPostComment(slug, body);
+    // Show the comment right away. The list reloads from the server afterwards.
+    setComments((prev) => [pending, ...(prev ?? [])]);
+    setBody('');
+    setError(null);
+    setSubmitting(true);
+
+    const result = await addPostComment(slug, text);
 
     setSubmitting(false);
 
     if (!result.success) {
+      setComments((prev) => (prev ?? []).filter((c) => c.id !== pending.id));
+      setBody(text);
       setError(t('comments.error'));
       return;
     }
 
-    setBody('');
     loadComments();
   }
 

@@ -88,7 +88,11 @@ async function notifyNewComment(
     });
 
     if (!res.ok) {
-      console.error('Comment notification failed:', res.status);
+      console.error(
+        'Comment notification failed:',
+        res.status,
+        await res.text()
+      );
     }
   } catch (error) {
     console.error('Comment notification failed:', error);
