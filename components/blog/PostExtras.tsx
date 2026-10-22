@@ -41,8 +41,7 @@ const CommentSkeleton = () => (
   >
     {[0, 1, 2].map((i) => (
       <li key={i} className='flex gap-3 py-5'>
-        <div className='size-9 shrink-0 rounded-[11px] bg-site-line' />
-        <div className='flex-1 space-y-2.5 pt-1'>
+        <div className='flex-1 space-y-2.5'>
           <div className='h-3 w-32 rounded bg-site-line' />
           <div className='h-3 w-full rounded bg-site-line' />
           <div className='h-3 w-2/3 rounded bg-site-line' />
@@ -171,7 +170,7 @@ const PostExtrasContent: React.FC<PostExtrasProps> = ({ slug, locale }) => {
               <Button
                 type='submit'
                 disabled={submitting || body.trim().length === 0}
-                className='hover:opacity-90 h-9 rounded-lg bg-site-accent px-4 text-white'
+                className='h-9 rounded-lg bg-site-accent px-4 text-white hover:opacity-90'
               >
                 {submitting ? t('comments.submitting') : t('comments.submit')}
               </Button>
@@ -211,12 +210,6 @@ const PostExtrasContent: React.FC<PostExtrasProps> = ({ slug, locale }) => {
 
             return (
               <li key={comment.id} className='flex gap-3 py-5'>
-                <div
-                  aria-hidden='true'
-                  className='flex size-9 shrink-0 items-center justify-center rounded-[11px] bg-site-accent-soft text-[14px] font-semibold text-site-accent'
-                >
-                  {name.charAt(0).toUpperCase()}
-                </div>
                 <div className='min-w-0 flex-1'>
                   <div className='flex flex-wrap items-baseline gap-x-2.5 gap-y-1'>
                     <span className='text-[14px] font-medium text-site-ink'>
