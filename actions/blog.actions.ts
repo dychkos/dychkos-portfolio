@@ -59,6 +59,42 @@ export async function getPostComments(slug: string) {
   }));
 }
 
+async function notifyNewComment(
+  slug: string,
+  authorName: string | null,
+  body: string
+) {
+  const apiKey = process.env.RESEND_API_KEY;
+  const to = process.env.NOTIFY_EMAIL;
+
+  if (!apiKey || !to) {
+    return;
+  }
+
+  // Failures are logged only. The comment is already saved.
+  try {
+    const res = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        from: 'Blog <onboarding@resend.dev>',
+        to: [to],
+        subject: `New comment on ${slug}`,
+        text: `${authorName ?? 'Reader'} commented on ${slug}:\n\n${body}`,
+      }),
+    });
+
+    if (!res.ok) {
+      console.error('Comment notification failed:', res.status);
+    }
+  } catch (error) {
+    console.error('Comment notification failed:', error);
+  }
+}
+
 export async function addPostComment(slug: string, body: string) {
   const readerId = await getCurrentReaderId();
 
@@ -72,9 +108,12 @@ export async function addPostComment(slug: string, body: string) {
     return { success: false, error: 'invalid' as const };
   }
 
-  await prisma.blogComment.create({
+  const comment = await prisma.blogComment.create({
     data: { slug, body: text, authorId: readerId },
+    include: { author: { select: { name: true } } },
   });
+
+  await notifyNewComment(slug, comment.author.name, text);
 
   return { success: true as const };
 }
