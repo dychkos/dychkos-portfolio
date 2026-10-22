@@ -126,6 +126,19 @@
     "text": "You won't find anything particularly brilliant here. I'm sharing what matters to me."
   },
   "Blog": {
+    "views": "Views: {count}",
+    "comments": {
+      "title": "Comments",
+      "empty": "No comments yet. Be the first.",
+      "placeholder": "Write a comment",
+      "submit": "Post comment",
+      "submitting": "Posting...",
+      "signedInAs": "Signed in as {name}",
+      "signInPrompt": "Sign in with Google to leave a comment.",
+      "signInWithGoogle": "Sign in with Google",
+      "anonymous": "Reader",
+      "error": "Could not post the comment. Try signing in again."
+    },
     "noPostsTitle": "No posts available",
     "noPostsFound": "Please check back later",
     "readingTime": "min read",

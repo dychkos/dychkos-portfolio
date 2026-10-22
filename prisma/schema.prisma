@@ -47,3 +47,28 @@ model Event {
   author    User?    @relation(fields: [authorId], references: [id])
   authorId  Int?
 }
+
+// Readers who sign in with Google. Kept apart from User (admin accounts).
+model Reader {
+  id        Int           @id @default(autoincrement())
+  email     String        @unique
+  name      String?
+  createdAt DateTime      @default(now())
+  comments  BlogComment[]
+}
+
+model BlogPostStat {
+  slug  String @id
+  views Int    @default(0)
+}
+
+model BlogComment {
+  id        Int      @id @default(autoincrement())
+  slug      String
+  body      String
+  createdAt DateTime @default(now())
+  author    Reader   @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId  Int
+
+  @@index([slug, createdAt])
+}

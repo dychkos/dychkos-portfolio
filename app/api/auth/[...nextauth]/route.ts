@@ -1,10 +1,15 @@
 import NextAuth, { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
+import GoogleProvider from 'next-auth/providers/google';
 import prisma from '@/lib/prisma';
 import { compare } from 'bcrypt';
 
 export const authOptions: NextAuthOptions = {
   providers: [
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID ?? '',
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? '',
+    }),
     CredentialsProvider({
       name: 'Credentials',
       credentials: {
@@ -51,6 +56,29 @@ export const authOptions: NextAuthOptions = {
     error: '/login',
   },
   callbacks: {
+    async signIn({ user, account }) {
+      if (account?.provider !== 'google' || !user.email) {
+        return true;
+      }
+
+      // Admin accounts sign in with a password only. A Google account
+      // with the same email must not get an admin session.
+      const admin = await prisma.user.findUnique({
+        where: { email: user.email },
+      });
+
+      if (admin) {
+        return false;
+      }
+
+      await prisma.reader.upsert({
+        where: { email: user.email },
+        create: { email: user.email, name: user.name },
+        update: { name: user.name },
+      });
+
+      return true;
+    },
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
