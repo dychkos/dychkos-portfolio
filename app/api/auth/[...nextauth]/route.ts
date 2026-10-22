@@ -52,8 +52,8 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   pages: {
-    signIn: '/login',
-    error: '/login',
+    signIn: '/private/login',
+    error: '/private/login',
   },
   callbacks: {
     async signIn({ user, account }) {

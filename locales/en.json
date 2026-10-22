@@ -137,6 +137,10 @@
       "signInPrompt": "Sign in with Google to leave a comment.",
       "signInWithGoogle": "Sign in with Google",
       "anonymous": "Reader",
+    "delete": "Delete",
+    "confirmDelete": "Confirm delete",
+    "cancel": "Cancel",
+    "deleteError": "Could not delete the comment.",
       "error": "Could not post the comment. Try signing in again."
     },
     "noPostsTitle": "No posts available",

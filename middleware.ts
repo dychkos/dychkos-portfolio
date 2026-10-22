@@ -15,7 +15,7 @@ export async function middleware(request: NextRequest) {
 
   if (
     pathname.startsWith('/admin') ||
-    pathname === '/login' ||
+    pathname === '/private/login' ||
     pathname.startsWith('/api/auth')
   ) {
     if (pathname.startsWith('/admin')) {
@@ -25,7 +25,7 @@ export async function middleware(request: NextRequest) {
       });
 
       if (!token) {
-        const url = new URL('/login', request.url);
+        const url = new URL('/private/login', request.url);
         url.searchParams.set('callbackUrl', pathname);
         return NextResponse.redirect(url);
       }
@@ -43,7 +43,7 @@ export const config = {
     '/(ua|en)/:path*',
 
     '/admin/:path*',
-    '/login',
+    '/private/login',
     '/api/auth/:path*',
   ],
 };

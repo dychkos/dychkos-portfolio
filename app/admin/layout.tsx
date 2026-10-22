@@ -30,7 +30,7 @@ export default async function AdminLayout({
   const user = await getAuthUser();
 
   if (!user) {
-    redirect('/login?callbackUrl=/admin');
+    redirect('/private/login?callbackUrl=/admin');
   }
 
   return (
